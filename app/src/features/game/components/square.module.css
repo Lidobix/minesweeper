@@ -1,0 +1,7 @@
+.square_container {
+  border-width: 1px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
