@@ -5,3 +5,9 @@
   justify-content: center;
   align-items: center;
 }
+
+.value {
+  text-align: center;
+  font-size: 3rem;
+  color: wheat;
+}
