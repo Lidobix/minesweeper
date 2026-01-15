@@ -1,27 +1,37 @@
-import { BoardType, CellId, CellType } from './types';
-import { BOMBS_QTY } from './constants';
-import { getCellsAround } from './utils';
-// import { useBoard } from './hooks/useBoard';
+import { GridType, CellId, CellType } from './types';
+import { MINES_QTY, NB_CELLS } from './constants';
+import { getCellsAround, getMinesAround } from './utils';
+// import { useGame } from './hooks/useGame';
 
 // let gameCells = [];
 // export const generateCells = () => {
-//   const cells = useBoard();
+//   const cells = useGame();
 // };
+
+const minesIndexes = [2, 7, 9, 10, 21];
+// const minesIndexes = [2];
+
+export const generateGrid = (): GridType => {
+  let grid = setGrid();
+  grid = setMinesValues(grid);
+
+  return grid;
+};
 
 export const getOpenedCells = (
   cell: CellType,
-  gameCells: BoardType
-): BoardType => {
+  gameCells: GridType
+): GridType => {
   const selectedCell = { ...cell };
-  let cellsToOpen: BoardType = [];
+  let cellsToOpen: GridType = [];
 
-  if (cell.isBomb) {
-    const trappedCells = gameCells.filter((cell) => cell.isBomb);
+  if (cell.isMine) {
+    const trappedCells = gameCells.filter((cell) => cell.isMine);
     cellsToOpen = trappedCells;
   } else if (selectedCell.value > 0) {
     cellsToOpen.push({ ...selectedCell, isOpen: true });
   } else {
-    let cellsToCheck: BoardType = [selectedCell];
+    let cellsToCheck: GridType = [selectedCell];
     const checkedIds: CellId[] = [];
     cellsToOpen.push(selectedCell);
     let customId = selectedCell.id;
@@ -30,7 +40,7 @@ export const getOpenedCells = (
       const cellsAround = getCellsAround(customId, gameCells);
 
       const cellsAroundToOpen = cellsAround.filter(
-        (cell) => !cell.isOpen && !cell.isBomb
+        (cell) => !cell.isOpen && !cell.isMine
       );
 
       cellsToOpen = cellsToOpen.concat(cellsAroundToOpen);
@@ -70,25 +80,40 @@ export const getOpenedCells = (
   return updatedCells;
 };
 
-export const updateFlags = (cell: CellType, gameCells: BoardType) => {
-  const selectedCell = { ...cell };
-  let remainingFlags = getRemainingFlagsCount(gameCells);
-  let updatedCells = [...gameCells];
-
-  if (remainingFlags > 0 || (remainingFlags === 0 && selectedCell.hasFlag)) {
-    updatedCells = gameCells.map((cell) => {
-      if (cell.id === selectedCell.id) {
-        cell.hasFlag = !cell.hasFlag;
-      }
-      return cell;
-    });
-
-    remainingFlags = getRemainingFlagsCount(updatedCells);
+export const placeFlag = (cell: CellType, grid: GridType, flags: number) => {
+  if (cell.isOpen || (flags === 0 && !cell.hasFlag)) {
+    return grid;
   }
 
-  return { updatedCells, remainingFlags };
+  let updatedGrid = [...grid];
+  const selectedCell = { ...cell };
+
+  // if (flags > 0 || (flags === 0 && selectedCell.hasFlag)) {
+  updatedGrid = grid.map((cell) => {
+    if (cell.id === selectedCell.id) {
+      cell.hasFlag = !cell.hasFlag;
+    }
+    return cell;
+  });
+  // }
+
+  return updatedGrid;
 };
 
-const getRemainingFlagsCount = (gameCells: BoardType): number => {
-  return BOMBS_QTY - gameCells.filter((cell) => cell.hasFlag).length;
+const setGrid = (): GridType => {
+  return Array.from({ length: NB_CELLS }, (element, index) => ({
+    value: 0,
+    isMine: minesIndexes.includes(index),
+    isOpen: false,
+    id: index,
+    hasFlag: false,
+  }));
+};
+
+const setMinesValues = (grid: GridType): GridType => {
+  const updatedGrid: GridType = grid.map((cell) => {
+    return { ...cell, value: getMinesAround(cell, grid) };
+  });
+
+  return updatedGrid;
 };

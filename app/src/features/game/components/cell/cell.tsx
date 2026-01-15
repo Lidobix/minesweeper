@@ -6,7 +6,7 @@ import styles from './cell.module.css';
 const RawCell = ({
   value,
   isOpen,
-  isBomb,
+  isMine,
   hasFlag,
   onClick,
   onContextMenu,
@@ -14,7 +14,7 @@ const RawCell = ({
   const setCellContent = (): string | null => {
     if (hasFlag) {
       return '🚩';
-    } else if (isOpen && isBomb) {
+    } else if (isOpen && isMine) {
       return '💥';
     } else if (isOpen && value !== 0) {
       return value.toString();

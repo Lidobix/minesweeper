@@ -1,7 +1,7 @@
 'use client';
 
 import MineSweeper from './src/features/game';
-import { BoardProvider } from './src/features/game/context/boardContext';
+import { GameProvider } from './src/features/game/context/gameContext';
 
 export default function Home() {
   return (
@@ -16,9 +16,9 @@ export default function Home() {
         backgroundColor: '#1B263B',
       }}
     >
-      <BoardProvider>
+      <GameProvider>
         <MineSweeper></MineSweeper>
-      </BoardProvider>
+      </GameProvider>
     </div>
   );
 }

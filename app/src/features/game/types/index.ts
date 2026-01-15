@@ -1,7 +1,7 @@
 export type CellId = number;
 
 export interface CellType {
-  isBomb: boolean;
+  isMine: boolean;
   value: number;
   id: CellId;
   isOpen: boolean;
@@ -9,7 +9,7 @@ export interface CellType {
 }
 
 export interface CellProps {
-  isBomb: boolean;
+  isMine: boolean;
   value: number;
   isOpen: boolean;
   hasFlag: boolean;
@@ -17,10 +17,10 @@ export interface CellProps {
   onContextMenu: (e: React.MouseEvent) => void;
 }
 
-export type BoardType = CellType[];
+export type GridType = CellType[];
 
-export interface BoardGameProps {
-  datas: BoardType;
+export interface GridGameProps {
+  datas: GridType;
   leftClick: (cell: CellType) => void;
   rightClick: (cell: CellType, e: React.MouseEvent) => void;
 }

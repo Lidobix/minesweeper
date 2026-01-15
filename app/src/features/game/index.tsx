@@ -1,69 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import Board from './components/board/board';
+import React from 'react';
+import Grid from './components/grid/grid';
 import Counter from './components/counter';
-import { useBoard } from './hooks/useBoard';
-import { BoardType, CellType } from './types';
-import { updateFlags, getOpenedCells } from './controller';
-import { BOMBS_QTY } from './constants';
-
-interface FlagsProps {
-  updatedCells: BoardType;
-  remainingFlags: number;
-}
+import { useGame } from './hooks/useGame';
+import { CellType } from './types';
 
 const MineSweeper = () => {
-  const { gameCells } = useBoard();
-  // const [gameCells, setGameCells] = useState(dataCells);
-  const [flagsCount, setFlagsCount] = useState(BOMBS_QTY);
-  const [endGame, setEndGame] = useState(false);
+  const { grid, flags, openCell, toggleFlag, resetGame } = useGame();
 
-  // useEffect(() => {
-  //   if (endGame) {
-  //   }
-
-  //   console.log(endGame ? 'endgame' : 'debut jeu');
-  // }, [endGame]);
-
-  const openCell = (cell: CellType) => {
-    if (cell.hasFlag || endGame) {
-      return;
-    }
-    setEndGame(cell.isBomb);
-    // checkGameState(cell, gameCells);
-
-    const cellsToOpen = getOpenedCells(cell, gameCells);
-
-    // setGameCells(cellsToOpen);
-  };
-
-  // const checkGameState = (cell, gameCells) => {
-  //   if (cell.isBomb) {
-  //   }
-  // };
-
-  const toggleFlag = (cell: CellType, e: React.MouseEvent) => {
+  const handleToggleFlag = (cell: CellType, e: React.MouseEvent) => {
     e.preventDefault();
-
-    if (cell.isOpen || endGame) {
-      return;
-    }
-    const { updatedCells, remainingFlags }: FlagsProps = updateFlags(
-      cell,
-      gameCells
-    );
-
-    // setGameCells(updatedCells);
-    setFlagsCount(remainingFlags);
+    toggleFlag(cell);
   };
 
   return (
     <div>
-      <Counter value={flagsCount}></Counter>
-      <Board
-        datas={gameCells}
+      <button onClick={resetGame}>Nouvelle partie</button>
+      <Counter value={flags}></Counter>
+      <Grid
+        datas={grid}
         leftClick={openCell}
-        rightClick={toggleFlag}
-      ></Board>
+        rightClick={handleToggleFlag}
+      ></Grid>
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import Cell from '../cell/cell';
+import styles from './grid.module.css';
 import { ROWS, CELL_SIZE } from '../../constants';
-import styles from './board.module.css';
-import { BoardGameProps } from '../../types';
+import { GridGameProps } from '../../types';
 
-const Board = ({ datas, leftClick, rightClick }: BoardGameProps) => {
+const Grid = ({ datas, leftClick, rightClick }: GridGameProps) => {
   return (
     <div
       className={styles.main_container}
@@ -14,7 +14,7 @@ const Board = ({ datas, leftClick, rightClick }: BoardGameProps) => {
             <Cell
               key={index}
               value={cell.value}
-              isBomb={cell.isBomb}
+              isMine={cell.isMine}
               isOpen={cell.isOpen}
               onClick={() => leftClick(cell)}
               onContextMenu={(e) => rightClick(cell, e)}
@@ -26,4 +26,4 @@ const Board = ({ datas, leftClick, rightClick }: BoardGameProps) => {
   );
 };
 
-export default Board;
+export default Grid;
