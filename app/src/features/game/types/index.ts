@@ -28,3 +28,5 @@ export interface GridGameProps {
 export interface CounterProps {
   value: number;
 }
+
+export type StatusType = 'playing' | 'lost' | 'win';
