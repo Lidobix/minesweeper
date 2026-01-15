@@ -26,7 +26,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const [flags, setFlags] = useState(MINES_QTY);
 
   const updateFlags = () => {
-    console.log('update flags context');
     const flags = MINES_QTY - grid.filter((cell) => cell.hasFlag).length;
     setFlags(flags);
   };

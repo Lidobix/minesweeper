@@ -1,12 +1,6 @@
 import { GridType, CellId, CellType } from './types';
-import { MINES_QTY, NB_CELLS } from './constants';
+import { NB_CELLS } from './constants';
 import { getCellsAround, getMinesAround } from './utils';
-// import { useGame } from './hooks/useGame';
-
-// let gameCells = [];
-// export const generateCells = () => {
-//   const cells = useGame();
-// };
 
 const minesIndexes = [2, 7, 9, 10, 21];
 // const minesIndexes = [2];
@@ -18,15 +12,12 @@ export const generateGrid = (): GridType => {
   return grid;
 };
 
-export const getOpenedCells = (
-  cell: CellType,
-  gameCells: GridType
-): GridType => {
+export const getOpenedCells = (cell: CellType, grid: GridType): GridType => {
   const selectedCell = { ...cell };
   let cellsToOpen: GridType = [];
 
   if (cell.isMine) {
-    const trappedCells = gameCells.filter((cell) => cell.isMine);
+    const trappedCells = grid.filter((cell) => cell.isMine);
     cellsToOpen = trappedCells;
   } else if (selectedCell.value > 0) {
     cellsToOpen.push({ ...selectedCell, isOpen: true });
@@ -37,7 +28,7 @@ export const getOpenedCells = (
     let customId = selectedCell.id;
 
     const searchAllCells = (customId: CellId) => {
-      const cellsAround = getCellsAround(customId, gameCells);
+      const cellsAround = getCellsAround(customId, grid);
 
       const cellsAroundToOpen = cellsAround.filter(
         (cell) => !cell.isOpen && !cell.isMine
@@ -70,7 +61,7 @@ export const getOpenedCells = (
     return cell.id;
   });
 
-  const updatedCells = gameCells.map((cell) => {
+  const updatedCells = grid.map((cell) => {
     if (idsToOpen.includes(cell.id)) {
       cell.isOpen = true;
     }
@@ -88,14 +79,12 @@ export const placeFlag = (cell: CellType, grid: GridType, flags: number) => {
   let updatedGrid = [...grid];
   const selectedCell = { ...cell };
 
-  // if (flags > 0 || (flags === 0 && selectedCell.hasFlag)) {
   updatedGrid = grid.map((cell) => {
     if (cell.id === selectedCell.id) {
       cell.hasFlag = !cell.hasFlag;
     }
     return cell;
   });
-  // }
 
   return updatedGrid;
 };

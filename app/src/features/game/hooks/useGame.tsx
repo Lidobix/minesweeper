@@ -1,9 +1,6 @@
-import { useEffect } from 'react';
-
-import { CellType, GridType } from '../types';
-
+import { useEffect, useContext } from 'react';
+import { CellType } from '../types';
 import { getOpenedCells, placeFlag, generateGrid } from '../controller';
-import { useContext } from 'react';
 import { GameContext } from '../context/gameContext';
 
 export const useGame = () => {
@@ -18,16 +15,7 @@ export const useGame = () => {
 
   const openCell = (cell: CellType) => {
     const updateGrid = getOpenedCells(cell, grid);
-
     setGrid(updateGrid);
-
-    // if (cell.hasFlag || endGame) {
-    //   return;
-    // }
-    // setEndGame(cell.isMine);
-    // checkGameState(cell, gameCells);
-    const cellsToOpen = getOpenedCells(cell, grid);
-    // setGameCells(cellsToOpen);
   };
 
   const toggleFlag = (cell: CellType) => {
@@ -35,8 +23,6 @@ export const useGame = () => {
     setGrid(updatedGrid);
     updateFlags();
   };
-
-  
 
   return { grid, openCell, toggleFlag, resetGame, flags };
 };
