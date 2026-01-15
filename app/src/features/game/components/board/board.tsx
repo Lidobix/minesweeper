@@ -1,4 +1,4 @@
-import Square from '../square/square';
+import Cell from '../cell/cell';
 import { ROWS, CELL_SIZE } from '../../constants';
 import styles from './board.module.css';
 import { BoardGameProps } from '../../types';
@@ -10,16 +10,16 @@ const Board = ({ datas, leftClick, rightClick }: BoardGameProps) => {
       style={{ width: `${ROWS * CELL_SIZE}px` }}
     >
       {datas.length > 0
-        ? datas.map((square, index) => (
-            <Square
+        ? datas.map((cell, index) => (
+            <Cell
               key={index}
-              value={square.value}
-              isBomb={square.isBomb}
-              isOpen={square.isOpen}
-              onClick={() => leftClick(square)}
-              onContextMenu={(e) => rightClick(square, e)}
-              hasFlag={square.hasFlag}
-            ></Square>
+              value={cell.value}
+              isBomb={cell.isBomb}
+              isOpen={cell.isOpen}
+              onClick={() => leftClick(cell)}
+              onContextMenu={(e) => rightClick(cell, e)}
+              hasFlag={cell.hasFlag}
+            ></Cell>
           ))
         : null}
     </div>

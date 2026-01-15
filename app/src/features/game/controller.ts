@@ -1,18 +1,27 @@
-import { BoardProps, CellId, SquareDataProps } from './types';
+import { BoardType, CellId, CellType } from './types';
 import { BOMBS_QTY } from './constants';
 import { getCellsAround } from './utils';
+// import { useBoard } from './hooks/useBoard';
+
+// let gameCells = [];
+// export const generateCells = () => {
+//   const cells = useBoard();
+// };
 
 export const getOpenedCells = (
-  cell: SquareDataProps,
-  gameCells: BoardProps
-): BoardProps => {
+  cell: CellType,
+  gameCells: BoardType
+): BoardType => {
   const selectedCell = { ...cell };
-  let cellsToOpen: BoardProps = [];
+  let cellsToOpen: BoardType = [];
 
-  if (selectedCell.value > 0) {
+  if (cell.isBomb) {
+    const trappedCells = gameCells.filter((cell) => cell.isBomb);
+    cellsToOpen = trappedCells;
+  } else if (selectedCell.value > 0) {
     cellsToOpen.push({ ...selectedCell, isOpen: true });
   } else {
-    let cellsToCheck: BoardProps = [selectedCell];
+    let cellsToCheck: BoardType = [selectedCell];
     const checkedIds: CellId[] = [];
     cellsToOpen.push(selectedCell);
     let customId = selectedCell.id;
@@ -44,9 +53,8 @@ export const getOpenedCells = (
     };
 
     searchAllCells(customId);
-
-    cellsToOpen = [...new Set(cellsToOpen)];
   }
+  cellsToOpen = [...new Set(cellsToOpen)];
 
   const idsToOpen = cellsToOpen.map((cell) => {
     return cell.id;
@@ -62,7 +70,7 @@ export const getOpenedCells = (
   return updatedCells;
 };
 
-export const updateFlags = (cell: SquareDataProps, gameCells: BoardProps) => {
+export const updateFlags = (cell: CellType, gameCells: BoardType) => {
   const selectedCell = { ...cell };
   let remainingFlags = getRemainingFlagsCount(gameCells);
   let updatedCells = [...gameCells];
@@ -81,6 +89,6 @@ export const updateFlags = (cell: SquareDataProps, gameCells: BoardProps) => {
   return { updatedCells, remainingFlags };
 };
 
-const getRemainingFlagsCount = (gameCells: BoardProps): number => {
+const getRemainingFlagsCount = (gameCells: BoardType): number => {
   return BOMBS_QTY - gameCells.filter((cell) => cell.hasFlag).length;
 };

@@ -1,5 +1,5 @@
 import { ROWS, NB_CELLS } from '../constants';
-import { BoardProps, CellId } from '../types';
+import { BoardType, CellId } from '../types';
 
 interface Indexes {
   upIndexes: CellId[];
@@ -46,12 +46,12 @@ const setIndexes = (id: CellId): Indexes => {
   return { upIndexes, downIndexes, sidesIndexes };
 };
 
-export const getCellsAround = (id: CellId, board: BoardProps) => {
+export const getCellsAround = (id: CellId, board: BoardType) => {
   const { upIndexes, downIndexes, sidesIndexes } = setIndexes(id);
 
-  let upCells: BoardProps = [];
-  let sidesCells: BoardProps = [];
-  let downCells: BoardProps = [];
+  let upCells: BoardType = [];
+  let sidesCells: BoardType = [];
+  let downCells: BoardType = [];
 
   if (upIndexes.length > 0) {
     upCells = board.slice(upIndexes[0], upIndexes[upIndexes.length - 1] + 1);
