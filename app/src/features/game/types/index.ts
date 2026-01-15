@@ -21,8 +21,8 @@ export type BoardProps = SquareDataProps[];
 
 export interface BoardGameProps {
   datas: BoardProps;
-  leftClick: (id: CellId) => void;
-  rightClick: (id: CellId, e: React.MouseEvent) => void;
+  leftClick: (cell: SquareDataProps) => void;
+  rightClick: (cell: SquareDataProps, e: React.MouseEvent) => void;
 }
 
 export interface CounterProps {

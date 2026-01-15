@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Board from '../board/board';
 import Counter from '../counter';
 import { useBoard } from '../../hooks/useBoard';
-import { BoardProps, CellId } from '../../types';
+import { BoardProps, SquareDataProps } from '../../types';
 import { updateFlags, getOpenedCells } from '../../controller';
 import { BOMBS_QTY } from '../../constants';
 
@@ -13,26 +13,35 @@ const MineSweeper = () => {
 
   interface FlagsProps {
     updatedCells: BoardProps;
-    updatedFlagsCount: number;
+    remainingFlags: number;
   }
 
-  const openCell = (id: CellId) => {
-    const cellsToOpen = getOpenedCells(id, [...gameCells]);
+  const openCell = (cell: SquareDataProps) => {
+    if (cell.hasFlag) {
+      return;
+    }
+
+    if (cell.isBomb) {
+    }
+
+    const cellsToOpen = getOpenedCells(cell, gameCells);
 
     setGameCells(cellsToOpen);
   };
 
-  const toggleFlag = (id: CellId, e: React.MouseEvent) => {
+  const toggleFlag = (cell: SquareDataProps, e: React.MouseEvent) => {
     e.preventDefault();
 
-    const { updatedCells, updatedFlagsCount }: FlagsProps = updateFlags(
-      id,
-      [...gameCells],
-      flagsCount
+    if (cell.isOpen) {
+      return;
+    }
+    const { updatedCells, remainingFlags }: FlagsProps = updateFlags(
+      cell,
+      gameCells
     );
 
     setGameCells(updatedCells);
-    setFlagsCount(updatedFlagsCount);
+    setFlagsCount(remainingFlags);
   };
 
   return (

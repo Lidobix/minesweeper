@@ -1,56 +1,51 @@
-import { BoardProps, CellId } from './types';
+import { BoardProps, CellId, SquareDataProps } from './types';
 import { BOMBS_QTY } from './constants';
 import { getCellsAround } from './utils';
 
 export const getOpenedCells = (
-  id: CellId,
+  cell: SquareDataProps,
   gameCells: BoardProps
 ): BoardProps => {
-  const selectedCell = gameCells.find((cell) => cell.id === id);
+  const selectedCell = { ...cell };
   let cellsToOpen: BoardProps = [];
 
-  if (selectedCell && !selectedCell.hasFlag) {
-    if (selectedCell.isBomb || selectedCell.value > 0) {
-      selectedCell.isOpen = true;
-      cellsToOpen.push(selectedCell);
-    } else if (selectedCell.value === 0) {
-      let cellsToCheck: BoardProps = [selectedCell];
-      const checkedIds: CellId[] = [];
-      cellsToOpen.push(selectedCell);
-      let customId = id;
+  if (selectedCell.value > 0) {
+    cellsToOpen.push({ ...selectedCell, isOpen: true });
+  } else {
+    let cellsToCheck: BoardProps = [selectedCell];
+    const checkedIds: CellId[] = [];
+    cellsToOpen.push(selectedCell);
+    let customId = selectedCell.id;
 
-      const searchAllCells = (customId: CellId) => {
-        const cellsAround = getCellsAround(customId, gameCells);
+    const searchAllCells = (customId: CellId) => {
+      const cellsAround = getCellsAround(customId, gameCells);
 
-        const cellsAroundToOpen = cellsAround.filter(
-          (cell) => !cell.isOpen && !cell.isBomb
-        );
+      const cellsAroundToOpen = cellsAround.filter(
+        (cell) => !cell.isOpen && !cell.isBomb
+      );
 
-        cellsToOpen = cellsToOpen.concat(cellsAroundToOpen);
+      cellsToOpen = cellsToOpen.concat(cellsAroundToOpen);
 
-        const filteredCellsAroundToOpen = cellsAroundToOpen.filter(
-          (cell) => cell.value === 0
-        );
+      const emptiesCellsAroundToCheck = cellsAroundToOpen.filter(
+        (cell) => cell.value === 0
+      );
 
-        cellsToCheck = cellsToCheck.concat(filteredCellsAroundToOpen);
+      cellsToCheck = cellsToCheck.concat(emptiesCellsAroundToCheck);
+      checkedIds.push(customId);
+      cellsToCheck = cellsToCheck.filter((cell) => cell.id !== customId);
 
-        checkedIds.push(customId);
+      if (cellsToCheck.length > 0) {
+        cellsToCheck.forEach((cell) => {
+          if (!checkedIds.includes(cell.id)) {
+            searchAllCells(cell.id);
+          }
+        });
+      } else return;
+    };
 
-        cellsToCheck = cellsToCheck.filter((cell) => cell.id !== customId);
+    searchAllCells(customId);
 
-        if (cellsToCheck.length > 0) {
-          cellsToCheck.forEach((cell) => {
-            if (!checkedIds.includes(cell.id)) {
-              searchAllCells(cell.id);
-            }
-          });
-        } else return;
-      };
-
-      searchAllCells(customId);
-
-      cellsToOpen = [...new Set(cellsToOpen)];
-    }
+    cellsToOpen = [...new Set(cellsToOpen)];
   }
 
   const idsToOpen = cellsToOpen.map((cell) => {
@@ -67,36 +62,25 @@ export const getOpenedCells = (
   return updatedCells;
 };
 
-export const updateFlags = (
-  id: CellId,
-  gameCells: BoardProps,
-  flagsCount: number
-) => {
-  const selectedCell = gameCells.find((cell) => cell.id === id);
-  let updatedFlagsCount = flagsCount;
+export const updateFlags = (cell: SquareDataProps, gameCells: BoardProps) => {
+  const selectedCell = { ...cell };
+  let remainingFlags = getRemainingFlagsCount(gameCells);
   let updatedCells = [...gameCells];
 
-  if (selectedCell) {
-    if (
-      (flagsCount > 0 && !selectedCell.isOpen) ||
-      (flagsCount === 0 && selectedCell.hasFlag)
-    ) {
-      updatedCells = gameCells.map((cell) => {
-        if (cell.id === id) {
-          cell.hasFlag = !cell.hasFlag;
-        }
-        return cell;
-      });
+  if (remainingFlags > 0 || (remainingFlags === 0 && selectedCell.hasFlag)) {
+    updatedCells = gameCells.map((cell) => {
+      if (cell.id === selectedCell.id) {
+        cell.hasFlag = !cell.hasFlag;
+      }
+      return cell;
+    });
 
-      updatedFlagsCount = updateFlagsCount(updatedCells);
-    }
+    remainingFlags = getRemainingFlagsCount(updatedCells);
   }
-  return { updatedCells, updatedFlagsCount };
+
+  return { updatedCells, remainingFlags };
 };
 
-const updateFlagsCount = (gameCells: BoardProps) => {
-  const flagsCount =
-    BOMBS_QTY - gameCells.filter((cell) => cell.hasFlag).length;
-
-  return flagsCount;
+const getRemainingFlagsCount = (gameCells: BoardProps): number => {
+  return BOMBS_QTY - gameCells.filter((cell) => cell.hasFlag).length;
 };

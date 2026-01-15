@@ -16,8 +16,8 @@ const Board = ({ datas, leftClick, rightClick }: BoardGameProps) => {
               value={square.value}
               isBomb={square.isBomb}
               isOpen={square.isOpen}
-              onClick={() => leftClick(square.id)}
-              onContextMenu={(e) => rightClick(square.id, e)}
+              onClick={() => leftClick(square)}
+              onContextMenu={(e) => rightClick(square, e)}
               hasFlag={square.hasFlag}
             ></Square>
           ))
