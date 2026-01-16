@@ -27,9 +27,10 @@ interface GameProviderProps {
 }
 
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
+  const defaultStatus: StatusType = 'playing';
   const [grid, setGrid] = useState<GridType>([]);
   const [flags, setFlags] = useState<number>(MINES_QTY);
-  const [status, setStatus] = useState<StatusType>('playing');
+  const [status, setStatus] = useState<StatusType>(defaultStatus);
 
   const updateFlags = () => {
     const flags = MINES_QTY - grid.filter((cell) => cell.hasFlag).length;
@@ -38,7 +39,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
   const resetGame = (grid: GridType) => {
     setGrid(grid);
-    setStatus('playing');
+    setStatus(defaultStatus);
+    updateFlags();
   };
 
   return (
