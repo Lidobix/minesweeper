@@ -1,5 +1,5 @@
 import { ROWS, NB_CELLS } from '../constants';
-import { BoardProps, CellId } from '../types';
+import { GridType, CellId, CellType } from '../types';
 
 interface Indexes {
   upIndexes: CellId[];
@@ -46,29 +46,58 @@ const setIndexes = (id: CellId): Indexes => {
   return { upIndexes, downIndexes, sidesIndexes };
 };
 
-export const getCellsAround = (id: CellId, board: BoardProps) => {
+export const getCellsAround = (id: CellId, grid: GridType) => {
   const { upIndexes, downIndexes, sidesIndexes } = setIndexes(id);
 
-  let upCells: BoardProps = [];
-  let sidesCells: BoardProps = [];
-  let downCells: BoardProps = [];
+  let upCells: GridType = [];
+  let sidesCells: GridType = [];
+  let downCells: GridType = [];
 
   if (upIndexes.length > 0) {
-    upCells = board.slice(upIndexes[0], upIndexes[upIndexes.length - 1] + 1);
+    upCells = grid.slice(upIndexes[0], upIndexes[upIndexes.length - 1] + 1);
   }
 
   if (sidesIndexes.length > 0) {
     sidesIndexes.forEach((index) => {
-      sidesCells.push(board[index]);
+      sidesCells.push(grid[index]);
     });
   }
 
   if (downIndexes.length > 0) {
-    downCells = board.slice(
+    downCells = grid.slice(
       downIndexes[0],
       downIndexes[downIndexes.length - 1] + 1
     );
   }
 
   return upCells.concat(sidesCells, downCells);
+};
+
+export const getMinesAround = (cell: CellType, grid: GridType): number => {
+  const cellsAround = getCellsAround(cell.id, grid);
+
+  return cellsAround.filter((cell) => cell.isMine).length;
+};
+
+export const getRandomMinesIndexes = (
+  min: number,
+  max: number,
+  length: number
+) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+
+  const indexes: number[] = [];
+
+  let i = 0;
+  while (i < length) {
+    const number = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    if (!indexes.includes(number)) {
+      indexes.push(number);
+      i++;
+    }
+  }
+
+  return indexes;
 };

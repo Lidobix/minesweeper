@@ -1,15 +1,15 @@
 export type CellId = number;
 
-export interface SquareDataProps {
-  isBomb: boolean;
+export interface CellType {
+  isMine: boolean;
   value: number;
   id: CellId;
   isOpen: boolean;
   hasFlag: boolean;
 }
 
-export interface SquareRenderProps {
-  isBomb: boolean;
+export interface CellProps {
+  isMine: boolean;
   value: number;
   isOpen: boolean;
   hasFlag: boolean;
@@ -17,14 +17,16 @@ export interface SquareRenderProps {
   onContextMenu: (e: React.MouseEvent) => void;
 }
 
-export type BoardProps = SquareDataProps[];
+export type GridType = CellType[];
 
-export interface BoardGameProps {
-  datas: BoardProps;
-  leftClick: (id: CellId) => void;
-  rightClick: (id: CellId, e: React.MouseEvent) => void;
+export interface GridGameProps {
+  datas: GridType;
+  leftClick: (cell: CellType) => void;
+  rightClick: (cell: CellType, e: React.MouseEvent) => void;
 }
 
 export interface CounterProps {
   value: number;
 }
+
+export type StatusType = 'playing' | 'lost' | 'win';

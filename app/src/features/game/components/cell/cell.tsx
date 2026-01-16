@@ -1,20 +1,20 @@
 import { memo } from 'react';
 import { CELL_SIZE } from '../../constants';
-import { SquareRenderProps } from '../../types';
-import styles from './square.module.css';
+import { CellProps } from '../../types';
+import styles from './cell.module.css';
 
-const RawSquare = ({
+const RawCell = ({
   value,
   isOpen,
-  isBomb,
+  isMine,
   hasFlag,
   onClick,
   onContextMenu,
-}: SquareRenderProps) => {
+}: CellProps) => {
   const setCellContent = (): string | null => {
     if (hasFlag) {
       return '🚩';
-    } else if (isOpen && isBomb) {
+    } else if (isOpen && isMine) {
       return '💥';
     } else if (isOpen && value !== 0) {
       return value.toString();
@@ -27,7 +27,7 @@ const RawSquare = ({
     <div
       onClick={onClick}
       onContextMenu={onContextMenu}
-      className={styles.square_container}
+      className={styles.cell_container}
       style={{
         height: `${CELL_SIZE}px`,
         width: `${CELL_SIZE}px`,
@@ -39,6 +39,6 @@ const RawSquare = ({
   );
 };
 
-const Square = memo(RawSquare);
+const Cell = memo(RawCell);
 
-export default Square;
+export default Cell;

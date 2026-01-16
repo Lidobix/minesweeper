@@ -1,63 +1,86 @@
-import { BoardProps, CellId } from './types';
-import { BOMBS_QTY } from './constants';
-import { getCellsAround } from './utils';
+import { GridType, CellId, CellType, StatusType } from './types';
+import { MINES_QTY, NB_CELLS } from './constants';
+import { getCellsAround, getMinesAround, getRandomMinesIndexes } from './utils';
 
-export const getOpenedCells = (
-  id: CellId,
-  gameCells: BoardProps
-): BoardProps => {
-  const selectedCell = gameCells.find((cell) => cell.id === id);
-  let cellsToOpen: BoardProps = [];
+export const generateGrid = (): GridType => {
+  const mines = generateMines();
+  let grid = setGrid(mines);
+  grid = setMinesValues(grid);
 
-  if (selectedCell && !selectedCell.hasFlag) {
-    if (selectedCell.isBomb || selectedCell.value > 0) {
-      selectedCell.isOpen = true;
-      cellsToOpen.push(selectedCell);
-    } else if (selectedCell.value === 0) {
-      let cellsToCheck: BoardProps = [selectedCell];
-      const checkedIds: CellId[] = [];
-      cellsToOpen.push(selectedCell);
-      let customId = id;
+  return grid;
+};
 
-      const searchAllCells = (customId: CellId) => {
-        const cellsAround = getCellsAround(customId, gameCells);
+export const checkGameStatus = (cell: CellType, grid: GridType): StatusType => {
+  let status: StatusType = 'playing';
 
-        const cellsAroundToOpen = cellsAround.filter(
-          (cell) => !cell.isOpen && !cell.isBomb
-        );
+  if (cell.isMine && !cell.hasFlag) {
+    status = 'lost';
+  } else {
+    const openedCells = grid.filter((cell) => cell.isOpen).length;
+    const targetCells = NB_CELLS - MINES_QTY;
 
-        cellsToOpen = cellsToOpen.concat(cellsAroundToOpen);
-
-        const filteredCellsAroundToOpen = cellsAroundToOpen.filter(
-          (cell) => cell.value === 0
-        );
-
-        cellsToCheck = cellsToCheck.concat(filteredCellsAroundToOpen);
-
-        checkedIds.push(customId);
-
-        cellsToCheck = cellsToCheck.filter((cell) => cell.id !== customId);
-
-        if (cellsToCheck.length > 0) {
-          cellsToCheck.forEach((cell) => {
-            if (!checkedIds.includes(cell.id)) {
-              searchAllCells(cell.id);
-            }
-          });
-        } else return;
-      };
-
-      searchAllCells(customId);
-
-      cellsToOpen = [...new Set(cellsToOpen)];
+    if (openedCells === targetCells) {
+      status = 'win';
     }
   }
+
+  return status;
+};
+
+export const getOpenedCells = (cell: CellType, grid: GridType): GridType => {
+  const selectedCell = { ...cell };
+  let cellsToOpen: GridType = [];
+
+  if (cell.hasFlag) {
+    return grid;
+  }
+
+  if (cell.isMine) {
+    const trappedCells = grid.filter((cell) => cell.isMine);
+    cellsToOpen = trappedCells;
+  } else if (selectedCell.value > 0) {
+    cellsToOpen.push({ ...selectedCell, isOpen: true });
+  } else {
+    let cellsToCheck: GridType = [selectedCell];
+    const checkedIds: CellId[] = [];
+    cellsToOpen.push(selectedCell);
+    let customId = selectedCell.id;
+
+    const searchAllCells = (customId: CellId) => {
+      const cellsAround = getCellsAround(customId, grid);
+
+      const cellsAroundToOpen = cellsAround.filter(
+        (cell) => !cell.isOpen && !cell.isMine
+      );
+
+      cellsToOpen = cellsToOpen.concat(cellsAroundToOpen);
+
+      const emptiesCellsAroundToCheck = cellsAroundToOpen.filter(
+        (cell) => cell.value === 0
+      );
+
+      cellsToCheck = cellsToCheck.concat(emptiesCellsAroundToCheck);
+      checkedIds.push(customId);
+      cellsToCheck = cellsToCheck.filter((cell) => cell.id !== customId);
+
+      if (cellsToCheck.length > 0) {
+        cellsToCheck.forEach((cell) => {
+          if (!checkedIds.includes(cell.id)) {
+            searchAllCells(cell.id);
+          }
+        });
+      } else return;
+    };
+
+    searchAllCells(customId);
+  }
+  cellsToOpen = [...new Set(cellsToOpen)];
 
   const idsToOpen = cellsToOpen.map((cell) => {
     return cell.id;
   });
 
-  const updatedCells = gameCells.map((cell) => {
+  const updatedCells = grid.map((cell) => {
     if (idsToOpen.includes(cell.id)) {
       cell.isOpen = true;
     }
@@ -67,36 +90,44 @@ export const getOpenedCells = (
   return updatedCells;
 };
 
-export const updateFlags = (
-  id: CellId,
-  gameCells: BoardProps,
-  flagsCount: number
-) => {
-  const selectedCell = gameCells.find((cell) => cell.id === id);
-  let updatedFlagsCount = flagsCount;
-  let updatedCells = [...gameCells];
-
-  if (selectedCell) {
-    if (
-      (flagsCount > 0 && !selectedCell.isOpen) ||
-      (flagsCount === 0 && selectedCell.hasFlag)
-    ) {
-      updatedCells = gameCells.map((cell) => {
-        if (cell.id === id) {
-          cell.hasFlag = !cell.hasFlag;
-        }
-        return cell;
-      });
-
-      updatedFlagsCount = updateFlagsCount(updatedCells);
-    }
+export const placeFlag = (cell: CellType, grid: GridType, flags: number) => {
+  if (cell.isOpen || (flags === 0 && !cell.hasFlag)) {
+    return grid;
   }
-  return { updatedCells, updatedFlagsCount };
+
+  let updatedGrid = [...grid];
+  const selectedCell = { ...cell };
+
+  updatedGrid = grid.map((cell) => {
+    if (cell.id === selectedCell.id) {
+      cell.hasFlag = !cell.hasFlag;
+    }
+    return cell;
+  });
+
+  return updatedGrid;
 };
 
-const updateFlagsCount = (gameCells: BoardProps) => {
-  const flagsCount =
-    BOMBS_QTY - gameCells.filter((cell) => cell.hasFlag).length;
+const setGrid = (mines: number[]): GridType => {
+  return Array.from({ length: NB_CELLS }, (element, index) => ({
+    value: 0,
+    isMine: mines.includes(index),
+    isOpen: false,
+    id: index,
+    hasFlag: false,
+  }));
+};
 
-  return flagsCount;
+const generateMines = () => {
+  const indexes = getRandomMinesIndexes(0, NB_CELLS, MINES_QTY);
+
+  return indexes;
+};
+
+const setMinesValues = (grid: GridType): GridType => {
+  const updatedGrid: GridType = grid.map((cell) => {
+    return { ...cell, value: getMinesAround(cell, grid) };
+  });
+
+  return updatedGrid;
 };
