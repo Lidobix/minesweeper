@@ -1,4 +1,10 @@
-import { GridType, CellId, CellType, StatusType } from './types';
+import {
+  GridType,
+  CellId,
+  CellType,
+  StatusType,
+  GameStatusType,
+} from './types';
 import { MINES_QTY, NB_CELLS } from './constants';
 import { getCellsAround, getMinesAround, getRandomMinesIndexes } from './utils';
 
@@ -10,8 +16,12 @@ export const generateGrid = (): GridType => {
   return grid;
 };
 
-export const checkGameStatus = (cell: CellType, grid: GridType): StatusType => {
+export const checkGameStatus = (
+  cell: CellType,
+  grid: GridType
+): GameStatusType => {
   let status: StatusType = 'playing';
+  let endGame = false;
 
   if (cell.isMine && !cell.hasFlag) {
     status = 'lost';
@@ -24,7 +34,8 @@ export const checkGameStatus = (cell: CellType, grid: GridType): StatusType => {
     }
   }
 
-  return status;
+  endGame = status === 'lost' || status === 'win';
+  return { endGame, status };
 };
 
 export const getOpenedCells = (cell: CellType, grid: GridType): GridType => {

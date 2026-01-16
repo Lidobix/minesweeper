@@ -30,3 +30,21 @@ export interface CounterProps {
 }
 
 export type StatusType = 'playing' | 'lost' | 'win';
+
+export interface HeaderProps {
+  flags: number;
+}
+
+export interface ButtonProps {
+  text: string;
+  onClick: () => void;
+}
+
+export interface ModalProps {
+  status: StatusType;
+}
+
+export interface GameStatusType {
+  endGame: boolean;
+  status: StatusType;
+}

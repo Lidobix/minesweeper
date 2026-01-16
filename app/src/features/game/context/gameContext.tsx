@@ -6,8 +6,10 @@ interface GameContextProps {
   grid: GridType;
   flags: number;
   status: StatusType;
+  endGame: boolean;
   setGrid: React.Dispatch<React.SetStateAction<GridType>>;
   setStatus: React.Dispatch<React.SetStateAction<StatusType>>;
+  setEndGame: React.Dispatch<React.SetStateAction<boolean>>;
   updateFlags: () => void;
   resetGame: (grid: GridType) => void;
 }
@@ -16,8 +18,10 @@ export const GameContext = createContext<GameContextProps>({
   grid: [],
   flags: MINES_QTY,
   status: 'playing',
+  endGame: false,
   setGrid: () => {},
   setStatus: () => {},
+  setEndGame: () => {},
   updateFlags: () => {},
   resetGame: () => {},
 });
@@ -27,9 +31,12 @@ interface GameProviderProps {
 }
 
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
+  const defaultStatus: StatusType = 'playing';
+
   const [grid, setGrid] = useState<GridType>([]);
   const [flags, setFlags] = useState<number>(MINES_QTY);
-  const [status, setStatus] = useState<StatusType>('playing');
+  const [status, setStatus] = useState<StatusType>(defaultStatus);
+  const [endGame, setEndGame] = useState<boolean>(false);
 
   const updateFlags = () => {
     const flags = MINES_QTY - grid.filter((cell) => cell.hasFlag).length;
@@ -38,7 +45,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
   const resetGame = (grid: GridType) => {
     setGrid(grid);
-    setStatus('playing');
+    setEndGame(false);
+    updateFlags();
+    setStatus(defaultStatus);
   };
 
   return (
@@ -47,8 +56,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         grid,
         flags,
         status,
+        endGame,
         setGrid,
         setStatus,
+        setEndGame,
         updateFlags,
         resetGame,
       }}

@@ -9,8 +9,17 @@ import {
 import { GameContext } from '../context/gameContext';
 
 export const useGame = () => {
-  const { grid, flags, status, setStatus, setGrid, updateFlags, resetGame } =
-    useContext(GameContext);
+  const {
+    grid,
+    flags,
+    status,
+    endGame,
+    setStatus,
+    setGrid,
+    setEndGame,
+    updateFlags,
+    resetGame,
+  } = useContext(GameContext);
 
   const setNewGame = useCallback(() => {
     const newGrid = generateGrid();
@@ -24,10 +33,11 @@ export const useGame = () => {
       const updateGrid = getOpenedCells(cell, grid);
       setGrid(updateGrid);
 
-      const updatedStatus = checkGameStatus(cell, grid);
+      const { status: updatedStatus, endGame } = checkGameStatus(cell, grid);
       setStatus(updatedStatus);
+      setEndGame(endGame);
     },
-    [grid, setGrid, setStatus]
+    [grid, setGrid, setStatus, setEndGame]
   );
 
   const toggleFlag = useCallback(
@@ -39,5 +49,5 @@ export const useGame = () => {
     [grid, flags, setGrid, updateFlags]
   );
 
-  return { grid, flags, status, openCell, toggleFlag, setNewGame };
+  return { grid, flags, status, endGame, openCell, toggleFlag, setNewGame };
 };
