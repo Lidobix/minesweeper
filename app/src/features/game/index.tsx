@@ -5,7 +5,7 @@ import { useGame } from './hooks/useGame';
 import { CellType } from './types';
 
 const MineSweeper = () => {
-  const { grid, flags, openCell, toggleFlag, resetGame } = useGame();
+  const { grid, flags, status, openCell, toggleFlag, setNewGame } = useGame();
 
   const handleToggleFlag = (cell: CellType, e: React.MouseEvent) => {
     e.preventDefault();
@@ -14,7 +14,8 @@ const MineSweeper = () => {
 
   return (
     <div>
-      <button onClick={resetGame}>Nouvelle partie</button>
+      <p>{status}</p>
+      <button onClick={setNewGame}>Nouvelle partie</button>
       <Counter value={flags}></Counter>
       <Grid
         datas={grid}

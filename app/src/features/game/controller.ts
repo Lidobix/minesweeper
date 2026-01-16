@@ -1,27 +1,43 @@
 import { GridType, CellId, CellType, StatusType } from './types';
-import { NB_CELLS } from './constants';
-import { getCellsAround, getMinesAround } from './utils';
+import { MINES_QTY, NB_CELLS } from './constants';
+import { getCellsAround, getMinesAround, getRandomMinesIndexes } from './utils';
 
-const minesIndexes = [2, 7, 9, 10, 21];
+// // const minesIndexes = [2, 7, 9, 10, 21];
 // const minesIndexes = [2];
 
 export const generateGrid = (): GridType => {
-  let grid = setGrid();
+  const mines = generateMines();
+  console.log(mines);
+  let grid = setGrid(mines);
   grid = setMinesValues(grid);
 
   return grid;
 };
 
 export const checkGameStatus = (cell: CellType, grid: GridType): StatusType => {
-  if (cell.isMine) {
-    return 'lost';
+  let status: StatusType = 'playing';
+
+  if (cell.isMine && !cell.hasFlag) {
+    status = 'lost';
+  } else {
+    const openedCells = grid.filter((cell) => cell.isOpen).length;
+    const targetCells = NB_CELLS - MINES_QTY;
+
+    if (openedCells === targetCells) {
+      status = 'win';
+    }
   }
-  return 'playing';
+
+  return status;
 };
 
 export const getOpenedCells = (cell: CellType, grid: GridType): GridType => {
   const selectedCell = { ...cell };
   let cellsToOpen: GridType = [];
+
+  if (cell.hasFlag) {
+    return grid;
+  }
 
   if (cell.isMine) {
     const trappedCells = grid.filter((cell) => cell.isMine);
@@ -96,14 +112,24 @@ export const placeFlag = (cell: CellType, grid: GridType, flags: number) => {
   return updatedGrid;
 };
 
-const setGrid = (): GridType => {
+const setGrid = (mines: number[]): GridType => {
   return Array.from({ length: NB_CELLS }, (element, index) => ({
     value: 0,
-    isMine: minesIndexes.includes(index),
+    isMine: mines.includes(index),
     isOpen: false,
     id: index,
     hasFlag: false,
   }));
+};
+
+const generateMines = () => {
+  const indexes = getRandomMinesIndexes(0, NB_CELLS, MINES_QTY);
+
+  return indexes;
+
+  // return Array.from({ length: MINES_QTY }, (element, index) => {
+  //   // return getRandomMinesIndexes(0, NB_CELLS);
+  // });
 };
 
 const setMinesValues = (grid: GridType): GridType => {

@@ -9,6 +9,7 @@ interface GameContextProps {
   setGrid: React.Dispatch<React.SetStateAction<GridType>>;
   setStatus: React.Dispatch<React.SetStateAction<StatusType>>;
   updateFlags: () => void;
+  resetGame: (grid: GridType) => void;
 }
 
 export const GameContext = createContext<GameContextProps>({
@@ -18,6 +19,7 @@ export const GameContext = createContext<GameContextProps>({
   setGrid: () => {},
   setStatus: () => {},
   updateFlags: () => {},
+  resetGame: () => {},
 });
 
 interface GameProviderProps {
@@ -34,15 +36,21 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     setFlags(flags);
   };
 
+  const resetGame = (grid: GridType) => {
+    setGrid(grid);
+    setStatus('playing');
+  };
+
   return (
     <GameContext.Provider
       value={{
         grid,
         flags,
-        setGrid,
-        updateFlags,
         status,
+        setGrid,
         setStatus,
+        updateFlags,
+        resetGame,
       }}
     >
       {children}

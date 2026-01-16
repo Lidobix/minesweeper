@@ -9,15 +9,15 @@ import {
 import { GameContext } from '../context/gameContext';
 
 export const useGame = () => {
-  const { grid, flags, status, setStatus, setGrid, updateFlags } =
+  const { grid, flags, status, setStatus, setGrid, updateFlags, resetGame } =
     useContext(GameContext);
 
-  const resetGame = useCallback(() => {
+  const setNewGame = useCallback(() => {
     const newGrid = generateGrid();
-    setGrid(newGrid);
-  }, [setGrid]);
+    resetGame(newGrid);
+  }, [resetGame]);
 
-  useEffect(resetGame, [setGrid, resetGame]);
+  useEffect(setNewGame, []);
 
   const openCell = useCallback(
     (cell: CellType) => {
@@ -39,5 +39,5 @@ export const useGame = () => {
     [grid, flags, setGrid, updateFlags]
   );
 
-  return { grid, flags, status, openCell, toggleFlag, resetGame };
+  return { grid, flags, status, openCell, toggleFlag, setNewGame };
 };

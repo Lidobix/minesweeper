@@ -74,7 +74,30 @@ export const getCellsAround = (id: CellId, grid: GridType) => {
 };
 
 export const getMinesAround = (cell: CellType, grid: GridType): number => {
-  const cellasAround = getCellsAround(cell.id, grid);
+  const cellsAround = getCellsAround(cell.id, grid);
 
-  return cellasAround.filter((cell) => cell.isMine).length;
+  return cellsAround.filter((cell) => cell.isMine).length;
+};
+
+export const getRandomMinesIndexes = (
+  min: number,
+  max: number,
+  length: number
+) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+
+  const indexes: number[] = [];
+
+  let i = 0;
+  while (i < length) {
+    const number = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    if (!indexes.includes(number)) {
+      indexes.push(number);
+      i++;
+    }
+  }
+
+  return indexes;
 };
