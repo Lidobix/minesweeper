@@ -2,12 +2,8 @@ import { GridType, CellId, CellType, StatusType } from './types';
 import { MINES_QTY, NB_CELLS } from './constants';
 import { getCellsAround, getMinesAround, getRandomMinesIndexes } from './utils';
 
-// // const minesIndexes = [2, 7, 9, 10, 21];
-// const minesIndexes = [2];
-
 export const generateGrid = (): GridType => {
   const mines = generateMines();
-  console.log(mines);
   let grid = setGrid(mines);
   grid = setMinesValues(grid);
 
@@ -126,10 +122,6 @@ const generateMines = () => {
   const indexes = getRandomMinesIndexes(0, NB_CELLS, MINES_QTY);
 
   return indexes;
-
-  // return Array.from({ length: MINES_QTY }, (element, index) => {
-  //   // return getRandomMinesIndexes(0, NB_CELLS);
-  // });
 };
 
 const setMinesValues = (grid: GridType): GridType => {
