@@ -41,6 +41,7 @@ export const checkGameStatus = (
 export const getOpenedCells = (cell: CellType, grid: GridType): GridType => {
   const selectedCell = { ...cell };
   let cellsToOpen: GridType = [];
+  console.log(cell);
 
   if (cell.hasFlag) {
     return grid;
@@ -61,7 +62,7 @@ export const getOpenedCells = (cell: CellType, grid: GridType): GridType => {
       const cellsAround = getCellsAround(customId, grid);
 
       const cellsAroundToOpen = cellsAround.filter(
-        (cell) => !cell.isOpen && !cell.isMine
+        (cell) => !cell.isOpen && !cell.isMine && !cell.hasFlag
       );
 
       cellsToOpen = cellsToOpen.concat(cellsAroundToOpen);

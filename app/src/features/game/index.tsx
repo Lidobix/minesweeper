@@ -5,41 +5,33 @@ import { CellType, StatusType } from './types';
 import Header from './components/header/header';
 import Button from './components/button/button';
 import styles from './index.module.css';
-import Modal from './components/modal/modal';
 
 const MineSweeper = () => {
-  const { grid, flags, status, openCell, toggleFlag, setNewGame } = useGame();
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const { grid, flags, status, endGame, openCell, toggleFlag, setNewGame } =
+    useGame();
+
   const handleToggleFlag = (cell: CellType, e: React.MouseEvent) => {
     e.preventDefault();
     toggleFlag(cell);
   };
 
-  const toggleModal = useCallback(
-    (status: StatusType) => {
-      setIsModalVisible(!isModalVisible);
-    },
-    [isModalVisible]
-  );
-
-  useEffect(() => {
-    if (status !== 'playing') {
-      toggleModal(status);
-    }
-  }, [status, toggleModal]);
+  useEffect(setNewGame, []);
 
   return (
     <div>
       <div className={styles.main_container}>
-        <Header flags={flags}></Header>
+        <Header
+          flags={flags}
+          buttonClick={setNewGame}
+          gameStatus={status}
+        ></Header>
         <Grid
           datas={grid}
           leftClick={openCell}
           rightClick={handleToggleFlag}
         ></Grid>
-        <Button onClick={setNewGame} text={'Nouvelle partie'}></Button>
+        <div></div>
       </div>
-      {isModalVisible ? <Modal status={status}></Modal> : null}
     </div>
   );
 };

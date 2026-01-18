@@ -1,4 +1,4 @@
-import { useEffect, useContext, useCallback } from 'react';
+import { useContext, useCallback } from 'react';
 import { CellType } from '../types';
 import {
   getOpenedCells,
@@ -25,8 +25,6 @@ export const useGame = () => {
     const newGrid = generateGrid();
     resetGame(newGrid);
   }, [resetGame]);
-
-  useEffect(setNewGame, []);
 
   const openCell = useCallback(
     (cell: CellType) => {

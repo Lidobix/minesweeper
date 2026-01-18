@@ -27,14 +27,28 @@ const RawCell = ({
     <div
       onClick={onClick}
       onContextMenu={onContextMenu}
-      className={styles.cell_container}
+      className={styles.main_container}
       style={{
         height: `${CELL_SIZE}px`,
         width: `${CELL_SIZE}px`,
-        backgroundColor: isOpen ? 'grey' : 'transparent',
+        backgroundColor: isOpen ? '#3f4747' : '#23ce6b',
       }}
     >
-      <p className={styles.value}>{setCellContent()}</p>
+      <p
+        className={styles.value}
+        style={{
+          color:
+            value === 1
+              ? '#2D7DD2'
+              : value === 2
+              ? '#EEB902'
+              : value === 3
+              ? '#DB5A42'
+              : 'blach',
+        }}
+      >
+        {setCellContent()}
+      </p>
     </div>
   );
 };

@@ -46,7 +46,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const resetGame = (grid: GridType) => {
     setGrid(grid);
     setEndGame(false);
-    updateFlags();
+    setFlags(MINES_QTY);
     setStatus(defaultStatus);
   };
 

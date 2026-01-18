@@ -33,15 +33,14 @@ export type StatusType = 'playing' | 'lost' | 'win';
 
 export interface HeaderProps {
   flags: number;
+  buttonClick: () => void;
+  gameStatus: StatusType;
 }
 
 export interface ButtonProps {
   text: string;
   onClick: () => void;
-}
-
-export interface ModalProps {
-  status: StatusType;
+  style?: React.CSSProperties;
 }
 
 export interface GameStatusType {
