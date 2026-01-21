@@ -9,12 +9,9 @@ export interface CellType {
 }
 
 export interface CellProps {
-  isMine: boolean;
-  value: number;
-  isOpen: boolean;
-  hasFlag: boolean;
-  onClick: () => void;
-  onContextMenu: (e: React.MouseEvent) => void;
+  cell: CellType;
+  onClick: (cell: CellType) => void;
+  onContextMenu: (cell: CellType, e: React.MouseEvent) => void;
 }
 
 export type GridType = CellType[];
@@ -30,3 +27,20 @@ export interface CounterProps {
 }
 
 export type StatusType = 'playing' | 'lost' | 'win';
+
+export interface HeaderProps {
+  flags: number;
+  buttonClick: () => void;
+  gameStatus: StatusType;
+}
+
+export interface ButtonProps {
+  text: string;
+  onClick: () => void;
+  style?: React.CSSProperties;
+}
+
+export interface GameStatusType {
+  endGame: boolean;
+  status: StatusType;
+}

@@ -13,7 +13,6 @@ export default function Home() {
         height: '100vh',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#1B263B',
       }}
     >
       <GameProvider>

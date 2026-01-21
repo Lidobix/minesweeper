@@ -1,13 +1,18 @@
-.cell_container {
-  border-width: 1px;
+.main_container {
+  border: 3px solid #272d2d;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 8px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -ms-border-radius: 8px;
+  -o-border-radius: 8px;
 }
 
 .value {
   text-align: center;
   font-size: 3rem;
-  color: wheat;
+  font-weight: 600;
 }

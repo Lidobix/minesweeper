@@ -1,24 +1,23 @@
 import { useState, createContext, ReactNode } from 'react';
-import { MINES_QTY } from '../constants';
 import { GridType, StatusType } from '../types';
 
 interface GameContextProps {
   grid: GridType;
-  flags: number;
   status: StatusType;
+  endGame: boolean;
   setGrid: React.Dispatch<React.SetStateAction<GridType>>;
   setStatus: React.Dispatch<React.SetStateAction<StatusType>>;
-  updateFlags: () => void;
+  setEndGame: React.Dispatch<React.SetStateAction<boolean>>;
   resetGame: (grid: GridType) => void;
 }
 
 export const GameContext = createContext<GameContextProps>({
   grid: [],
-  flags: MINES_QTY,
   status: 'playing',
+  endGame: false,
   setGrid: () => {},
   setStatus: () => {},
-  updateFlags: () => {},
+  setEndGame: () => {},
   resetGame: () => {},
 });
 
@@ -28,30 +27,26 @@ interface GameProviderProps {
 
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const defaultStatus: StatusType = 'playing';
-  const [grid, setGrid] = useState<GridType>([]);
-  const [flags, setFlags] = useState<number>(MINES_QTY);
-  const [status, setStatus] = useState<StatusType>(defaultStatus);
 
-  const updateFlags = () => {
-    const flags = MINES_QTY - grid.filter((cell) => cell.hasFlag).length;
-    setFlags(flags);
-  };
+  const [grid, setGrid] = useState<GridType>([]);
+  const [status, setStatus] = useState<StatusType>(defaultStatus);
+  const [endGame, setEndGame] = useState<boolean>(false);
 
   const resetGame = (grid: GridType) => {
     setGrid(grid);
+    setEndGame(false);
     setStatus(defaultStatus);
-    updateFlags();
   };
 
   return (
     <GameContext.Provider
       value={{
         grid,
-        flags,
         status,
+        endGame,
         setGrid,
         setStatus,
-        updateFlags,
+        setEndGame,
         resetGame,
       }}
     >

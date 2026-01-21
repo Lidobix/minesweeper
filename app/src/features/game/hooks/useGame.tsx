@@ -1,4 +1,4 @@
-import { useEffect, useContext, useCallback } from 'react';
+import { useContext, useCallback } from 'react';
 import { CellType } from '../types';
 import {
   getOpenedCells,
@@ -9,7 +9,7 @@ import {
 import { GameContext } from '../context/gameContext';
 
 export const useGame = () => {
-  const { grid, flags, status, setStatus, setGrid, updateFlags, resetGame } =
+  const { grid, status, endGame, setStatus, setGrid, setEndGame, resetGame } =
     useContext(GameContext);
 
   const setNewGame = useCallback(() => {
@@ -17,27 +17,33 @@ export const useGame = () => {
     resetGame(newGrid);
   }, [resetGame]);
 
-  useEffect(setNewGame, []);
-
   const openCell = useCallback(
     (cell: CellType) => {
-      const updateGrid = getOpenedCells(cell, grid);
-      setGrid(updateGrid);
-
-      const updatedStatus = checkGameStatus(cell, grid);
-      setStatus(updatedStatus);
+      if (status !== 'playing') return;
+      setGrid((currentGrid) => {
+        const updateGrid = getOpenedCells(cell, currentGrid, status);
+        const { status: updatedStatus, endGame } = checkGameStatus(
+          cell,
+          updateGrid,
+        );
+        setStatus(updatedStatus);
+        setEndGame(endGame);
+        return updateGrid;
+      });
     },
-    [grid, setGrid, setStatus]
+    [setGrid, setStatus, setEndGame, status],
   );
 
   const toggleFlag = useCallback(
     (cell: CellType) => {
-      const updatedGrid = placeFlag(cell, grid, flags);
-      setGrid(updatedGrid);
-      updateFlags();
+      setGrid((currentGrid) => {
+        const currentFlagsCount = currentGrid.filter((c) => c.hasFlag).length;
+
+        return placeFlag(cell, currentGrid, currentFlagsCount);
+      });
     },
-    [grid, flags, setGrid, updateFlags]
+    [setGrid],
   );
 
-  return { grid, flags, status, openCell, toggleFlag, setNewGame };
+  return { grid, status, endGame, openCell, toggleFlag, setNewGame };
 };
