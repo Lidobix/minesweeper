@@ -1,0 +1,11 @@
+.main_container {
+  background-color: #3f4747;
+  display: flex;
+  justify-content: center;
+}
+
+.value {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 600;
+}

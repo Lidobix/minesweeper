@@ -13,12 +13,9 @@ const Grid = ({ datas, leftClick, rightClick }: GridGameProps) => {
         ? datas.map((cell, index) => (
             <Cell
               key={index}
-              value={cell.value}
-              isMine={cell.isMine}
-              isOpen={cell.isOpen}
-              onClick={() => leftClick(cell)}
-              onContextMenu={(e) => rightClick(cell, e)}
-              hasFlag={cell.hasFlag}
+              cell={cell}
+              onClick={leftClick}
+              onContextMenu={rightClick}
             ></Cell>
           ))
         : null}

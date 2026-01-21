@@ -3,48 +3,43 @@ import { CELL_SIZE } from '../../constants';
 import { CellProps } from '../../types';
 import styles from './cell.module.css';
 
-const RawCell = ({
-  value,
-  isOpen,
-  isMine,
-  hasFlag,
-  onClick,
-  onContextMenu,
-}: CellProps) => {
+const RawCell = ({ cell, onClick, onContextMenu }: CellProps) => {
   const setCellContent = (): string | null => {
-    if (hasFlag) {
+    if (cell.hasFlag) {
       return '🚩';
-    } else if (isOpen && isMine) {
+    } else if (cell.isOpen && cell.isMine) {
       return '💥';
-    } else if (isOpen && value !== 0) {
-      return value.toString();
+    } else if (cell.isOpen && cell.value !== 0) {
+      return cell.value.toString();
     } else {
       return null;
     }
   };
 
+  const handleLeftCLick = () => onClick(cell);
+  const handleRightClick = (e: React.MouseEvent) => onContextMenu(cell, e);
   return (
     <div
-      onClick={onClick}
-      onContextMenu={onContextMenu}
+      onClick={handleLeftCLick}
+      onContextMenu={handleRightClick}
       className={styles.main_container}
       style={{
         height: `${CELL_SIZE}px`,
         width: `${CELL_SIZE}px`,
-        backgroundColor: isOpen ? '#3f4747' : '#23ce6b',
+        backgroundColor: cell.isOpen ? '#3f4747' : '#23ce6b',
       }}
     >
       <p
         className={styles.value}
         style={{
           color:
-            value === 1
+            cell.value === 1
               ? '#2D7DD2'
-              : value === 2
-              ? '#EEB902'
-              : value === 3
-              ? '#DB5A42'
-              : 'blach',
+              : cell.value === 2
+                ? '#EEB902'
+                : cell.value === 3
+                  ? '#DB5A42'
+                  : 'blach',
         }}
       >
         {setCellContent()}

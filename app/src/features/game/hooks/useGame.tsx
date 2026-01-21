@@ -9,17 +9,8 @@ import {
 import { GameContext } from '../context/gameContext';
 
 export const useGame = () => {
-  const {
-    grid,
-    flags,
-    status,
-    endGame,
-    setStatus,
-    setGrid,
-    setEndGame,
-    updateFlags,
-    resetGame,
-  } = useContext(GameContext);
+  const { grid, status, endGame, setStatus, setGrid, setEndGame, resetGame } =
+    useContext(GameContext);
 
   const setNewGame = useCallback(() => {
     const newGrid = generateGrid();
@@ -28,24 +19,31 @@ export const useGame = () => {
 
   const openCell = useCallback(
     (cell: CellType) => {
-      const updateGrid = getOpenedCells(cell, grid);
-      setGrid(updateGrid);
-
-      const { status: updatedStatus, endGame } = checkGameStatus(cell, grid);
-      setStatus(updatedStatus);
-      setEndGame(endGame);
+      if (status !== 'playing') return;
+      setGrid((currentGrid) => {
+        const updateGrid = getOpenedCells(cell, currentGrid, status);
+        const { status: updatedStatus, endGame } = checkGameStatus(
+          cell,
+          updateGrid,
+        );
+        setStatus(updatedStatus);
+        setEndGame(endGame);
+        return updateGrid;
+      });
     },
-    [grid, setGrid, setStatus, setEndGame]
+    [setGrid, setStatus, setEndGame, status],
   );
 
   const toggleFlag = useCallback(
     (cell: CellType) => {
-      const updatedGrid = placeFlag(cell, grid, flags);
-      setGrid(updatedGrid);
-      updateFlags();
+      setGrid((currentGrid) => {
+        const currentFlagsCount = currentGrid.filter((c) => c.hasFlag).length;
+
+        return placeFlag(cell, currentGrid, currentFlagsCount);
+      });
     },
-    [grid, flags, setGrid, updateFlags]
+    [setGrid],
   );
 
-  return { grid, flags, status, endGame, openCell, toggleFlag, setNewGame };
+  return { grid, status, endGame, openCell, toggleFlag, setNewGame };
 };

@@ -9,12 +9,9 @@ export interface CellType {
 }
 
 export interface CellProps {
-  isMine: boolean;
-  value: number;
-  isOpen: boolean;
-  hasFlag: boolean;
-  onClick: () => void;
-  onContextMenu: (e: React.MouseEvent) => void;
+  cell: CellType;
+  onClick: (cell: CellType) => void;
+  onContextMenu: (cell: CellType, e: React.MouseEvent) => void;
 }
 
 export type GridType = CellType[];
