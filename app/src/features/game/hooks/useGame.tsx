@@ -1,16 +1,12 @@
-import { useContext, useCallback } from 'react';
+import { useContext, useCallback, useState } from 'react';
 import { CellType } from '../types';
-import {
-  getOpenedCells,
-  placeFlag,
-  generateGrid,
-  checkGameStatus,
-} from '../controller';
+import { getOpenedCells, placeFlag, generateGrid } from '../controller';
 import { GameContext } from '../context/gameContext';
 
 export const useGame = () => {
   const { grid, status, endGame, setStatus, setGrid, setEndGame, resetGame } =
     useContext(GameContext);
+  const [isFirstMove, setIsFirstMove] = useState(true);
 
   const setNewGame = useCallback(() => {
     const newGrid = generateGrid();
@@ -21,14 +17,14 @@ export const useGame = () => {
     (cell: CellType) => {
       if (status !== 'playing') return;
       setGrid((currentGrid) => {
-        const updateGrid = getOpenedCells(cell, currentGrid, status);
-        const { status: updatedStatus, endGame } = checkGameStatus(
+        const { updatedGrid, status, endGame } = getOpenedCells(
           cell,
-          updateGrid,
+          currentGrid,
         );
-        setStatus(updatedStatus);
+
+        setStatus(status);
         setEndGame(endGame);
-        return updateGrid;
+        return updatedGrid;
       });
     },
     [setGrid, setStatus, setEndGame, status],
@@ -36,13 +32,14 @@ export const useGame = () => {
 
   const toggleFlag = useCallback(
     (cell: CellType) => {
+      if (status !== 'playing') return;
       setGrid((currentGrid) => {
         const currentFlagsCount = currentGrid.filter((c) => c.hasFlag).length;
 
         return placeFlag(cell, currentGrid, currentFlagsCount);
       });
     },
-    [setGrid],
+    [setGrid, status],
   );
 
   return { grid, status, endGame, openCell, toggleFlag, setNewGame };

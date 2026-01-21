@@ -39,8 +39,3 @@ export interface ButtonProps {
   onClick: () => void;
   style?: React.CSSProperties;
 }
-
-export interface GameStatusType {
-  endGame: boolean;
-  status: StatusType;
-}

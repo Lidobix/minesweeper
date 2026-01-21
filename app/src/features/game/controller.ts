@@ -1,10 +1,4 @@
-import {
-  GridType,
-  CellId,
-  CellType,
-  StatusType,
-  GameStatusType,
-} from './types';
+import { GridType, CellId, CellType, StatusType } from './types';
 import { MINES_QTY, NB_CELLS } from './constants';
 import { getCellsAround, getMinesAround, getRandomMinesIndexes } from './utils';
 
@@ -16,41 +10,21 @@ export const generateGrid = (): GridType => {
   return grid;
 };
 
-export const checkGameStatus = (
-  cell: CellType,
-  grid: GridType,
-): GameStatusType => {
-  let status: StatusType = 'playing';
-  let endGame = false;
-
-  if (cell.isMine && !cell.hasFlag) {
-    status = 'lost';
-  } else {
-    const openedCells = grid.filter((cell) => cell.isOpen).length;
-    const targetCells = NB_CELLS - MINES_QTY;
-
-    if (openedCells === targetCells) {
-      status = 'win';
-    }
-  }
-
-  endGame = status === 'lost' || status === 'win';
-  return { endGame, status };
-};
-
 export const getOpenedCells = (
   cell: CellType,
   grid: GridType,
-  status: StatusType,
-): GridType => {
-  if (cell.hasFlag || cell.isOpen || status !== 'playing') return grid;
+): { updatedGrid: GridType; status: StatusType; endGame: boolean } => {
+  if (cell.hasFlag || cell.isOpen)
+    return { updatedGrid: grid, status: 'playing', endGame: false };
 
   const idsToOpen = new Set<CellId>();
 
   if (cell.isMine) {
-    grid.forEach((c) => {
-      if (c.isMine) idsToOpen.add(c.id);
-    });
+    return {
+      updatedGrid: grid.map((c) => (c.isMine ? { ...c, isOpen: true } : c)),
+      status: 'lost',
+      endGame: true,
+    };
   } else {
     const stack = [cell.id];
     while (stack.length > 0) {
@@ -69,9 +43,18 @@ export const getOpenedCells = (
         });
       }
     }
-  }
 
-  return grid.map((c) => (idsToOpen.has(c.id) ? { ...c, isOpen: true } : c));
+    const openedCells = grid.filter((cell) => cell.isOpen).length;
+    const isWin = openedCells === NB_CELLS - MINES_QTY;
+
+    return {
+      updatedGrid: grid.map((c) =>
+        idsToOpen.has(c.id) ? { ...c, isOpen: true } : c,
+      ),
+      status: isWin ? 'win' : 'playing',
+      endGame: isWin,
+    };
+  }
 };
 
 export const placeFlag = (cell: CellType, grid: GridType, flags: number) => {
