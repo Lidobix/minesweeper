@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import Grid from './components/grid/grid';
 import { useGame } from './hooks/useGame';
 import { CellType } from './types';
@@ -19,8 +19,6 @@ const MineSweeper = () => {
 
   const activeFlags = grid.filter((c) => c.hasFlag).length;
   const remainingFLags = MINES_QTY - activeFlags;
-
-  useEffect(setNewGame, []);
 
   return (
     <div>

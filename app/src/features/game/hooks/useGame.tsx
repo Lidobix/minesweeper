@@ -1,6 +1,6 @@
 import { useContext, useCallback, useState } from 'react';
 import { CellType } from '../types';
-import { getOpenedCells, placeFlag, generateGrid } from '../controller';
+import { getOpenedCells, placeFlag, fillGrid } from '../controller';
 import { GameContext } from '../context/gameContext';
 
 export const useGame = () => {
@@ -9,17 +9,23 @@ export const useGame = () => {
   const [isFirstMove, setIsFirstMove] = useState(true);
 
   const setNewGame = useCallback(() => {
-    const newGrid = generateGrid();
-    resetGame(newGrid);
+    setIsFirstMove(true);
+    resetGame();
   }, [resetGame]);
 
   const openCell = useCallback(
     (cell: CellType) => {
       if (status !== 'playing' || cell.hasFlag || cell.isOpen) return;
       setGrid((currentGrid) => {
+        let gridToProcess = currentGrid;
+        if (isFirstMove) {
+          gridToProcess = fillGrid(cell, currentGrid);
+          setIsFirstMove(false);
+        }
+
         const { updatedGrid, status, endGame } = getOpenedCells(
           cell,
-          currentGrid,
+          gridToProcess,
         );
 
         setStatus(status);
@@ -27,7 +33,7 @@ export const useGame = () => {
         return updatedGrid;
       });
     },
-    [setGrid, setStatus, setEndGame, status],
+    [setGrid, setStatus, setEndGame, status, isFirstMove],
   );
 
   const toggleFlag = useCallback(

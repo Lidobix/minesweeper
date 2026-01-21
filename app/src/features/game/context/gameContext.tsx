@@ -1,5 +1,6 @@
 import { useState, createContext, ReactNode } from 'react';
 import { GridType, StatusType } from '../types';
+import { NB_CELLS } from '../constants';
 
 interface GameContextProps {
   grid: GridType;
@@ -8,7 +9,7 @@ interface GameContextProps {
   setGrid: React.Dispatch<React.SetStateAction<GridType>>;
   setStatus: React.Dispatch<React.SetStateAction<StatusType>>;
   setEndGame: React.Dispatch<React.SetStateAction<boolean>>;
-  resetGame: (grid: GridType) => void;
+  resetGame: () => void;
 }
 
 export const GameContext = createContext<GameContextProps>({
@@ -27,13 +28,29 @@ interface GameProviderProps {
 
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const defaultStatus: StatusType = 'playing';
+  const [grid, setGrid] = useState<GridType>(
+    Array.from({ length: NB_CELLS }, (_, index) => ({
+      id: index,
+      value: 0,
+      isMine: false,
+      isOpen: false,
+      hasFlag: false,
+    })) as GridType,
+  );
 
-  const [grid, setGrid] = useState<GridType>([]);
   const [status, setStatus] = useState<StatusType>(defaultStatus);
   const [endGame, setEndGame] = useState<boolean>(false);
 
-  const resetGame = (grid: GridType) => {
-    setGrid(grid);
+  const resetGame = () => {
+    setGrid(
+      Array.from({ length: NB_CELLS }, (_, index) => ({
+        id: index,
+        value: 0,
+        isMine: false,
+        isOpen: false,
+        hasFlag: false,
+      })),
+    );
     setEndGame(false);
     setStatus(defaultStatus);
   };

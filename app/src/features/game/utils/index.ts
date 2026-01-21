@@ -1,4 +1,4 @@
-import { ROWS, NB_CELLS } from '../constants';
+import { ROWS, NB_CELLS, MINES_QTY } from '../constants';
 import { GridType, CellId, CellType } from '../types';
 
 interface Indexes {
@@ -66,7 +66,7 @@ export const getCellsAround = (id: CellId, grid: GridType) => {
   if (downIndexes.length > 0) {
     downCells = grid.slice(
       downIndexes[0],
-      downIndexes[downIndexes.length - 1] + 1
+      downIndexes[downIndexes.length - 1] + 1,
     );
   }
 
@@ -79,21 +79,14 @@ export const getMinesAround = (cell: CellType, grid: GridType): number => {
   return cellsAround.filter((cell) => cell.isMine).length;
 };
 
-export const getRandomMinesIndexes = (
-  min: number,
-  max: number,
-  length: number
-) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-
+export const getRandomMinesIndexes = (safeId: number) => {
   const indexes: number[] = [];
 
   let i = 0;
-  while (i < length) {
-    const number = Math.floor(Math.random() * (max - min + 1)) + min;
+  while (i < MINES_QTY) {
+    const number = Math.floor(Math.random() * (NB_CELLS + 1));
 
-    if (!indexes.includes(number)) {
+    if (!indexes.includes(number) && number !== safeId) {
       indexes.push(number);
       i++;
     }

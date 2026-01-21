@@ -2,12 +2,19 @@ import { GridType, CellId, CellType, StatusType } from './types';
 import { MINES_QTY, NB_CELLS } from './constants';
 import { getCellsAround, getMinesAround, getRandomMinesIndexes } from './utils';
 
-export const generateGrid = (): GridType => {
-  const mines = getRandomMinesIndexes(0, NB_CELLS, MINES_QTY);
-  let grid = createGrid(mines);
-  grid = setMinesValues(grid);
+export const fillGrid = (
+  safeCell: CellType,
+  currentGrid: GridType,
+): GridType => {
+  const minesPositions = getRandomMinesIndexes(safeCell.id);
 
-  return grid;
+  let newGrid = currentGrid.map((c) => ({
+    ...c,
+    isMine: minesPositions.includes(c.id),
+    value: 0,
+  }));
+  newGrid = setMinesValues(newGrid);
+  return newGrid;
 };
 
 export const getOpenedCells = (
@@ -65,16 +72,6 @@ export const placeFlag = (cell: CellType, grid: GridType, flags: number) => {
     }
     return { ...c, hasFlag: !c.hasFlag };
   });
-};
-
-const createGrid = (mines: number[]): GridType => {
-  return Array.from({ length: NB_CELLS }, (element, index) => ({
-    value: 0,
-    isMine: mines.includes(index),
-    isOpen: false,
-    id: index,
-    hasFlag: false,
-  }));
 };
 
 const setMinesValues = (grid: GridType): GridType => {
