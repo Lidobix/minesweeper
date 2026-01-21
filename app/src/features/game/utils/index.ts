@@ -84,7 +84,7 @@ export const getRandomMinesIndexes = (safeId: number) => {
 
   let i = 0;
   while (i < MINES_QTY) {
-    const number = Math.floor(Math.random() * (NB_CELLS + 1));
+    const number = Math.floor(Math.random() * NB_CELLS);
 
     if (!indexes.includes(number) && number !== safeId) {
       indexes.push(number);

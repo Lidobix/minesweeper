@@ -11,16 +11,18 @@ export const useGame = () => {
   const setNewGame = useCallback(() => {
     setIsFirstMove(true);
     resetGame();
-  }, [resetGame]);
+  }, [resetGame, setIsFirstMove]);
 
   const openCell = useCallback(
     (cell: CellType) => {
       if (status !== 'playing' || cell.hasFlag || cell.isOpen) return;
+      if (isFirstMove) {
+        setIsFirstMove(false);
+      }
       setGrid((currentGrid) => {
         let gridToProcess = currentGrid;
         if (isFirstMove) {
           gridToProcess = fillGrid(cell, currentGrid);
-          setIsFirstMove(false);
         }
 
         const { updatedGrid, status, endGame } = getOpenedCells(
@@ -33,7 +35,7 @@ export const useGame = () => {
         return updatedGrid;
       });
     },
-    [setGrid, setStatus, setEndGame, status, isFirstMove],
+    [setGrid, setStatus, setEndGame, status, isFirstMove, setIsFirstMove],
   );
 
   const toggleFlag = useCallback(
