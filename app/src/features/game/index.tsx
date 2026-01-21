@@ -44,6 +44,7 @@ const MineSweeper = () => {
           datas={grid}
           leftClick={openCell}
           rightClick={handleToggleFlag}
+          status={status}
         ></Grid>
         <div></div>
       </div>

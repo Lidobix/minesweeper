@@ -20,6 +20,7 @@ export interface GridGameProps {
   datas: GridType;
   leftClick: (cell: CellType) => void;
   rightClick: (cell: CellType, e: React.MouseEvent) => void;
+  status: StatusType;
 }
 
 export interface CounterProps {
