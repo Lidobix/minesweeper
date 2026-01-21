@@ -14,9 +14,6 @@ export const getOpenedCells = (
   cell: CellType,
   grid: GridType,
 ): { updatedGrid: GridType; status: StatusType; endGame: boolean } => {
-  if (cell.hasFlag || cell.isOpen)
-    return { updatedGrid: grid, status: 'playing', endGame: false };
-
   const idsToOpen = new Set<CellId>();
 
   if (cell.isMine) {
@@ -44,8 +41,9 @@ export const getOpenedCells = (
       }
     }
 
-    const openedCells = grid.filter((cell) => cell.isOpen).length;
-    const isWin = openedCells === NB_CELLS - MINES_QTY;
+    const alreadyOpened = grid.filter((c) => c.isOpen).length;
+    const totalOpened = alreadyOpened + idsToOpen.size;
+    const isWin = totalOpened === NB_CELLS - MINES_QTY;
 
     return {
       updatedGrid: grid.map((c) =>

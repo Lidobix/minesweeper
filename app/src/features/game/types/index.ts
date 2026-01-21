@@ -12,6 +12,7 @@ export interface CellProps {
   cell: CellType;
   onClick: (cell: CellType) => void;
   onContextMenu: (cell: CellType, e: React.MouseEvent) => void;
+  status: StatusType;
 }
 
 export type GridType = CellType[];
@@ -40,3 +41,9 @@ export interface ButtonProps {
   onClick: () => void;
   style?: React.CSSProperties;
 }
+
+export interface ColorType {
+  [index: number]: string;
+}
+
+export type StatusColorType = Record<StatusType, string>;

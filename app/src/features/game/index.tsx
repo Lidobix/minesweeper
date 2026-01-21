@@ -4,7 +4,7 @@ import { useGame } from './hooks/useGame';
 import { CellType } from './types';
 import Header from './components/header/header';
 import styles from './index.module.css';
-import { MINES_QTY } from './constants';
+import { MINES_QTY, STATUS_COLOR } from './constants';
 
 const MineSweeper = () => {
   const { grid, status, openCell, toggleFlag, setNewGame } = useGame();
@@ -27,12 +27,7 @@ const MineSweeper = () => {
       <div
         className={styles.main_container}
         style={{
-          borderColor:
-            status === 'win'
-              ? '#23ce6b'
-              : status === 'lost'
-                ? 'red'
-                : '#3f4747',
+          borderColor: STATUS_COLOR[status],
         }}
       >
         <Header

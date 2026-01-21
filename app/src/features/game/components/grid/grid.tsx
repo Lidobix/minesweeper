@@ -9,7 +9,6 @@ const Grid = ({ datas, leftClick, rightClick, status }: GridGameProps) => {
       className={styles.main_container}
       style={{
         width: `${ROWS * CELL_SIZE}px`,
-        cursor: status !== 'playing' ? 'default' : 'pointer',
       }}
     >
       {datas.length > 0
@@ -19,6 +18,7 @@ const Grid = ({ datas, leftClick, rightClick, status }: GridGameProps) => {
               cell={cell}
               onClick={leftClick}
               onContextMenu={rightClick}
+              status={status}
             ></Cell>
           ))
         : null}

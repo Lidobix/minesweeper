@@ -15,7 +15,7 @@ export const useGame = () => {
 
   const openCell = useCallback(
     (cell: CellType) => {
-      if (status !== 'playing') return;
+      if (status !== 'playing' || cell.hasFlag || cell.isOpen) return;
       setGrid((currentGrid) => {
         const { updatedGrid, status, endGame } = getOpenedCells(
           cell,
