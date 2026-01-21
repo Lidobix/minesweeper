@@ -1,24 +1,20 @@
-import { useState, createContext, ReactNode } from 'react';
+import { useState, createContext, ReactNode, useCallback } from 'react';
 import { GridType, StatusType } from '../types';
 import { NB_CELLS } from '../constants';
 
 interface GameContextProps {
   grid: GridType;
   status: StatusType;
-  endGame: boolean;
   setGrid: React.Dispatch<React.SetStateAction<GridType>>;
   setStatus: React.Dispatch<React.SetStateAction<StatusType>>;
-  setEndGame: React.Dispatch<React.SetStateAction<boolean>>;
   resetGame: () => void;
 }
 
 export const GameContext = createContext<GameContextProps>({
   grid: [],
-  status: 'playing',
-  endGame: false,
+  status: 'standBy',
   setGrid: () => {},
   setStatus: () => {},
-  setEndGame: () => {},
   resetGame: () => {},
 });
 
@@ -27,7 +23,7 @@ interface GameProviderProps {
 }
 
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
-  const defaultStatus: StatusType = 'playing';
+  const defaultStatus: StatusType = 'standBy';
   const [grid, setGrid] = useState<GridType>(
     Array.from({ length: NB_CELLS }, (_, index) => ({
       id: index,
@@ -39,9 +35,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   );
 
   const [status, setStatus] = useState<StatusType>(defaultStatus);
-  const [endGame, setEndGame] = useState<boolean>(false);
 
-  const resetGame = () => {
+  const resetGame = useCallback(() => {
     setGrid(
       Array.from({ length: NB_CELLS }, (_, index) => ({
         id: index,
@@ -51,19 +46,16 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         hasFlag: false,
       })),
     );
-    setEndGame(false);
     setStatus(defaultStatus);
-  };
+  }, [setGrid, setStatus]);
 
   return (
     <GameContext.Provider
       value={{
         grid,
         status,
-        endGame,
         setGrid,
         setStatus,
-        setEndGame,
         resetGame,
       }}
     >

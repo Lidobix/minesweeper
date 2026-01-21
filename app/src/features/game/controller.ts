@@ -20,14 +20,16 @@ export const fillGrid = (
 export const getOpenedCells = (
   cell: CellType,
   grid: GridType,
-): { updatedGrid: GridType; status: StatusType; endGame: boolean } => {
+): {
+  updatedGrid: GridType;
+  status: StatusType;
+} => {
   const idsToOpen = new Set<CellId>();
 
   if (cell.isMine) {
     return {
       updatedGrid: grid.map((c) => (c.isMine ? { ...c, isOpen: true } : c)),
       status: 'lost',
-      endGame: true,
     };
   } else {
     const stack = [cell.id];
@@ -57,7 +59,6 @@ export const getOpenedCells = (
         idsToOpen.has(c.id) ? { ...c, isOpen: true } : c,
       ),
       status: isWin ? 'win' : 'playing',
-      endGame: isWin,
     };
   }
 };

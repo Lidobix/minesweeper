@@ -28,7 +28,7 @@ export interface CounterProps {
   value: number;
 }
 
-export type StatusType = 'playing' | 'lost' | 'win';
+export type StatusType = 'standBy' | 'playing' | 'lost' | 'win';
 
 export interface HeaderProps {
   flags: number;
@@ -47,3 +47,7 @@ export interface ColorType {
 }
 
 export type StatusColorType = Record<StatusType, string>;
+
+export interface TimerProps {
+  toggle: StatusType;
+}

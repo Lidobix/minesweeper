@@ -1,54 +1,66 @@
-import { useContext, useCallback, useState } from 'react';
+import { useContext, useCallback, useRef, useEffect } from 'react';
 import { CellType } from '../types';
 import { getOpenedCells, placeFlag, fillGrid } from '../controller';
 import { GameContext } from '../context/gameContext';
 
 export const useGame = () => {
-  const { grid, status, endGame, setStatus, setGrid, setEndGame, resetGame } =
+  const { grid, status, setStatus, setGrid, resetGame } =
     useContext(GameContext);
-  const [isFirstMove, setIsFirstMove] = useState(true);
 
-  const setNewGame = useCallback(() => {
-    setIsFirstMove(true);
-    resetGame();
-  }, [resetGame, setIsFirstMove]);
+  const statusRef = useRef(status);
+
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
 
   const openCell = useCallback(
     (cell: CellType) => {
-      if (status !== 'playing' || cell.hasFlag || cell.isOpen) return;
-      if (isFirstMove) {
-        setIsFirstMove(false);
-      }
+      const currentStatus = statusRef.current;
+
+      if (
+        (currentStatus !== 'standBy' && currentStatus !== 'playing') ||
+        cell.hasFlag ||
+        cell.isOpen
+      )
+        return;
+
       setGrid((currentGrid) => {
         let gridToProcess = currentGrid;
-        if (isFirstMove) {
+
+        if (statusRef.current === 'standBy') {
           gridToProcess = fillGrid(cell, currentGrid);
         }
 
-        const { updatedGrid, status, endGame } = getOpenedCells(
+        const { updatedGrid, status: nextStatus } = getOpenedCells(
           cell,
           gridToProcess,
         );
 
-        setStatus(status);
-        setEndGame(endGame);
+        setStatus(nextStatus);
         return updatedGrid;
       });
     },
-    [setGrid, setStatus, setEndGame, status, isFirstMove, setIsFirstMove],
+    [setGrid, setStatus],
   );
 
   const toggleFlag = useCallback(
     (cell: CellType) => {
-      if (status !== 'playing') return;
+      const currentStatus = statusRef.current;
+      if (currentStatus !== 'playing' && currentStatus !== 'standBy') return;
+
       setGrid((currentGrid) => {
         const currentFlagsCount = currentGrid.filter((c) => c.hasFlag).length;
-
         return placeFlag(cell, currentGrid, currentFlagsCount);
       });
     },
-    [setGrid, status],
+    [setGrid],
   );
 
-  return { grid, status, endGame, openCell, toggleFlag, setNewGame };
+  return {
+    grid,
+    status,
+    resetGame,
+    openCell,
+    toggleFlag,
+  };
 };

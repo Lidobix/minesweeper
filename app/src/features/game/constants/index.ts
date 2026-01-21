@@ -13,6 +13,7 @@ const customRed = 'red';
 export const STATUS_COLOR: StatusColorType = {
   win: CUSTOM_GREEN,
   playing: CUSTOM_GREY,
+  standBy: CUSTOM_GREY,
   lost: customRed,
 };
 
