@@ -12,6 +12,7 @@ export interface CellProps {
   cell: CellType;
   onClick: (cell: CellType) => void;
   onContextMenu: (cell: CellType, e: React.MouseEvent) => void;
+  status: StatusType;
 }
 
 export type GridType = CellType[];
@@ -20,6 +21,7 @@ export interface GridGameProps {
   datas: GridType;
   leftClick: (cell: CellType) => void;
   rightClick: (cell: CellType, e: React.MouseEvent) => void;
+  status: StatusType;
 }
 
 export interface CounterProps {
@@ -40,7 +42,8 @@ export interface ButtonProps {
   style?: React.CSSProperties;
 }
 
-export interface GameStatusType {
-  endGame: boolean;
-  status: StatusType;
+export interface ColorType {
+  [index: number]: string;
 }
+
+export type StatusColorType = Record<StatusType, string>;

@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import Grid from './components/grid/grid';
 import { useGame } from './hooks/useGame';
 import { CellType } from './types';
 import Header from './components/header/header';
 import styles from './index.module.css';
-import { MINES_QTY } from './constants';
+import { MINES_QTY, STATUS_COLOR } from './constants';
 
 const MineSweeper = () => {
   const { grid, status, openCell, toggleFlag, setNewGame } = useGame();
@@ -20,19 +20,12 @@ const MineSweeper = () => {
   const activeFlags = grid.filter((c) => c.hasFlag).length;
   const remainingFLags = MINES_QTY - activeFlags;
 
-  useEffect(setNewGame, []);
-
   return (
     <div>
       <div
         className={styles.main_container}
         style={{
-          borderColor:
-            status === 'win'
-              ? '#23ce6b'
-              : status === 'lost'
-                ? 'red'
-                : '#3f4747',
+          borderColor: STATUS_COLOR[status],
         }}
       >
         <Header
@@ -44,6 +37,7 @@ const MineSweeper = () => {
           datas={grid}
           leftClick={openCell}
           rightClick={handleToggleFlag}
+          status={status}
         ></Grid>
         <div></div>
       </div>

@@ -1,56 +1,34 @@
-import {
-  GridType,
-  CellId,
-  CellType,
-  StatusType,
-  GameStatusType,
-} from './types';
+import { GridType, CellId, CellType, StatusType } from './types';
 import { MINES_QTY, NB_CELLS } from './constants';
 import { getCellsAround, getMinesAround, getRandomMinesIndexes } from './utils';
 
-export const generateGrid = (): GridType => {
-  const mines = getRandomMinesIndexes(0, NB_CELLS, MINES_QTY);
-  let grid = createGrid(mines);
-  grid = setMinesValues(grid);
+export const fillGrid = (
+  safeCell: CellType,
+  currentGrid: GridType,
+): GridType => {
+  const minesPositions = getRandomMinesIndexes(safeCell.id);
 
-  return grid;
-};
-
-export const checkGameStatus = (
-  cell: CellType,
-  grid: GridType,
-): GameStatusType => {
-  let status: StatusType = 'playing';
-  let endGame = false;
-
-  if (cell.isMine && !cell.hasFlag) {
-    status = 'lost';
-  } else {
-    const openedCells = grid.filter((cell) => cell.isOpen).length;
-    const targetCells = NB_CELLS - MINES_QTY;
-
-    if (openedCells === targetCells) {
-      status = 'win';
-    }
-  }
-
-  endGame = status === 'lost' || status === 'win';
-  return { endGame, status };
+  let newGrid = currentGrid.map((c) => ({
+    ...c,
+    isMine: minesPositions.includes(c.id),
+    value: 0,
+  }));
+  newGrid = setMinesValues(newGrid);
+  return newGrid;
 };
 
 export const getOpenedCells = (
   cell: CellType,
   grid: GridType,
-  status: StatusType,
-): GridType => {
-  if (cell.hasFlag || cell.isOpen || status !== 'playing') return grid;
-
+): { updatedGrid: GridType; status: StatusType; endGame: boolean } => {
   const idsToOpen = new Set<CellId>();
 
   if (cell.isMine) {
-    grid.forEach((c) => {
-      if (c.isMine) idsToOpen.add(c.id);
-    });
+    return {
+      updatedGrid: grid.map((c) => (c.isMine ? { ...c, isOpen: true } : c)),
+      status: 'lost',
+      endGame: true,
+    };
   } else {
     const stack = [cell.id];
     while (stack.length > 0) {
@@ -69,9 +47,19 @@ export const getOpenedCells = (
         });
       }
     }
-  }
 
-  return grid.map((c) => (idsToOpen.has(c.id) ? { ...c, isOpen: true } : c));
+    const alreadyOpened = grid.filter((c) => c.isOpen).length;
+    const totalOpened = alreadyOpened + idsToOpen.size;
+    const isWin = totalOpened === NB_CELLS - MINES_QTY;
+
+    return {
+      updatedGrid: grid.map((c) =>
+        idsToOpen.has(c.id) ? { ...c, isOpen: true } : c,
+      ),
+      status: isWin ? 'win' : 'playing',
+      endGame: isWin,
+    };
+  }
 };
 
 export const placeFlag = (cell: CellType, grid: GridType, flags: number) => {
@@ -84,16 +72,6 @@ export const placeFlag = (cell: CellType, grid: GridType, flags: number) => {
     }
     return { ...c, hasFlag: !c.hasFlag };
   });
-};
-
-const createGrid = (mines: number[]): GridType => {
-  return Array.from({ length: NB_CELLS }, (element, index) => ({
-    value: 0,
-    isMine: mines.includes(index),
-    isOpen: false,
-    id: index,
-    hasFlag: false,
-  }));
 };
 
 const setMinesValues = (grid: GridType): GridType => {

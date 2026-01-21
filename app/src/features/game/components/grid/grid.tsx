@@ -3,11 +3,13 @@ import styles from './grid.module.css';
 import { ROWS, CELL_SIZE } from '../../constants';
 import { GridGameProps } from '../../types';
 
-const Grid = ({ datas, leftClick, rightClick }: GridGameProps) => {
+const Grid = ({ datas, leftClick, rightClick, status }: GridGameProps) => {
   return (
     <div
       className={styles.main_container}
-      style={{ width: `${ROWS * CELL_SIZE}px` }}
+      style={{
+        width: `${ROWS * CELL_SIZE}px`,
+      }}
     >
       {datas.length > 0
         ? datas.map((cell, index) => (
@@ -16,6 +18,7 @@ const Grid = ({ datas, leftClick, rightClick }: GridGameProps) => {
               cell={cell}
               onClick={leftClick}
               onContextMenu={rightClick}
+              status={status}
             ></Cell>
           ))
         : null}
