@@ -4,12 +4,12 @@ import styles from './header.module.css';
 import Button from '../button/button';
 import Timer from '../timer/timer';
 
-const Header = ({ flags, buttonClick, gameStatus }: HeaderProps) => {
+const Header = ({ flags, buttonClick, status }: HeaderProps) => {
   return (
     <div className={styles.main_container}>
-      {/* <Timer></Timer> */}
+      <Timer></Timer>
       <Button
-        text={gameStatus === 'lost' ? '😫' : gameStatus === 'win' ? '😎' : '🙂'}
+        text={status === 'lost' ? '😫' : status === 'win' ? '😎' : '🙂'}
         onClick={buttonClick}
       ></Button>
       <Counter value={flags}></Counter>

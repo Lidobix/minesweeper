@@ -31,7 +31,7 @@ const MineSweeper = () => {
         <Header
           flags={remainingFLags}
           buttonClick={resetGame}
-          gameStatus={status}
+          status={status}
         ></Header>
         <Grid
           datas={grid}

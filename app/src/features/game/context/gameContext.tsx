@@ -5,16 +5,20 @@ import { NB_CELLS } from '../constants';
 interface GameContextProps {
   grid: GridType;
   status: StatusType;
+  time: number;
   setGrid: React.Dispatch<React.SetStateAction<GridType>>;
   setStatus: React.Dispatch<React.SetStateAction<StatusType>>;
+  setTime: React.Dispatch<React.SetStateAction<number>>;
   resetGame: () => void;
 }
 
 export const GameContext = createContext<GameContextProps>({
   grid: [],
   status: 'standBy',
+  time: 0,
   setGrid: () => {},
   setStatus: () => {},
+  setTime: () => {},
   resetGame: () => {},
 });
 
@@ -24,6 +28,7 @@ interface GameProviderProps {
 
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const defaultStatus: StatusType = 'standBy';
+  const [time, setTime] = useState(0);
   const [grid, setGrid] = useState<GridType>(
     Array.from({ length: NB_CELLS }, (_, index) => ({
       id: index,
@@ -47,15 +52,18 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
       })),
     );
     setStatus(defaultStatus);
-  }, [setGrid, setStatus]);
+    setTime(0);
+  }, [setGrid, setStatus, setTime]);
 
   return (
     <GameContext.Provider
       value={{
         grid,
         status,
+        time,
         setGrid,
         setStatus,
+        setTime,
         resetGame,
       }}
     >
