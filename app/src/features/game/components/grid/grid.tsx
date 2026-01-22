@@ -1,9 +1,10 @@
+import { memo } from 'react';
 import Cell from '../cell/cell';
 import styles from './grid.module.css';
 import { ROWS, CELL_SIZE } from '../../constants';
 import { GridGameProps } from '../../types';
 
-const Grid = ({ datas, leftClick, rightClick, status }: GridGameProps) => {
+const RawGrid = ({ datas, leftClick, rightClick, status }: GridGameProps) => {
   return (
     <div
       className={styles.main_container}
@@ -25,5 +26,7 @@ const Grid = ({ datas, leftClick, rightClick, status }: GridGameProps) => {
     </div>
   );
 };
+
+const Grid = memo(RawGrid);
 
 export default Grid;

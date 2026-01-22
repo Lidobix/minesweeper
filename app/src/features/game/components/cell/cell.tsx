@@ -34,7 +34,7 @@ const RawCell = ({ cell, onClick, onContextMenu, status }: CellProps) => {
         width: `${CELL_SIZE}px`,
         backgroundColor: cell.isOpen ? CUSTOM_GREY : CUSTOM_GREEN,
         cursor:
-          status !== 'playing'
+          status !== 'playing' && status !== 'standBy'
             ? 'default'
             : cell.isOpen
               ? 'default'

@@ -84,7 +84,7 @@ export const getRandomMinesIndexes = (safeId: number) => {
 
   let i = 0;
   while (i < MINES_QTY) {
-    const number = Math.floor(Math.random() * (NB_CELLS + 1));
+    const number = Math.floor(Math.random() * NB_CELLS);
 
     if (!indexes.includes(number) && number !== safeId) {
       indexes.push(number);
@@ -93,4 +93,14 @@ export const getRandomMinesIndexes = (safeId: number) => {
   }
 
   return indexes;
+};
+
+export const formatTime = (seconds: number): string => {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+
+  const formattedMins = mins.toString().padStart(2, '0');
+  const formattedSecs = secs.toString().padStart(2, '0');
+
+  return `${formattedMins}:${formattedSecs}`;
 };

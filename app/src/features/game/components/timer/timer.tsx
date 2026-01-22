@@ -1,21 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import styles from './timer.module.css';
+import { GameContext } from '../../context/gameContext';
+import { formatTime } from '../../utils';
+import { useTimer } from '../../hooks/useTimer';
 
 const Timer = () => {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    console.log('timer');
-
-    const interval = setInterval(() => {
-      setCount((prev) => prev + 1);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+  useTimer();
+  const { time } = useContext(GameContext);
 
   return (
     <div className={styles.main_container}>
-      <p className={styles.value}>{count}</p>
+      <p className={styles.value}>{formatTime(time)}</p>
     </div>
   );
 };

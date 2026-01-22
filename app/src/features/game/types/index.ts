@@ -28,12 +28,12 @@ export interface CounterProps {
   value: number;
 }
 
-export type StatusType = 'playing' | 'lost' | 'win';
+export type StatusType = 'standBy' | 'playing' | 'lost' | 'win';
 
 export interface HeaderProps {
   flags: number;
   buttonClick: () => void;
-  gameStatus: StatusType;
+  status: StatusType;
 }
 
 export interface ButtonProps {

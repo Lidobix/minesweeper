@@ -7,7 +7,7 @@ import styles from './index.module.css';
 import { MINES_QTY, STATUS_COLOR } from './constants';
 
 const MineSweeper = () => {
-  const { grid, status, openCell, toggleFlag, setNewGame } = useGame();
+  const { grid, status, openCell, toggleFlag, resetGame } = useGame();
 
   const handleToggleFlag = useCallback(
     (cell: CellType, e: React.MouseEvent) => {
@@ -30,8 +30,8 @@ const MineSweeper = () => {
       >
         <Header
           flags={remainingFLags}
-          buttonClick={setNewGame}
-          gameStatus={status}
+          buttonClick={resetGame}
+          status={status}
         ></Header>
         <Grid
           datas={grid}
