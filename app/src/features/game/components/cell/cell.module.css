@@ -1,5 +1,4 @@
 .main_container {
-  border: 3px solid #272d2d;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,6 +11,6 @@
 
 .value {
   text-align: center;
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 600;
 }

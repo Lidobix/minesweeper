@@ -1,6 +1,40 @@
-.main_container {
+/* .main_container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   box-sizing: content-box;
+} */
+.main_container {
+  display: grid;
+  /* On utilise les variables injectées par React */
+  grid-template-columns: repeat(var(--cols), var(--cell-size));
+  grid-template-rows: repeat(var(--rows), var(--cell-size));
+  /* background-color: var(--color); */
+  gap: 2px;
+  box-sizing: content-box;
+  justify-content: center;
+  /* padding: var(--grid-padding); */
+  margin: 0;
+  /* background-color: #bdbdbd; */
+  /* border: 3px solid #7b7b7b; */
+}
+@media (max-width: 768px) and (orientation: portrait) {
+  .main_container {
+    /* On force les cellules à s'adapter à la largeur de l'écran 
+       pour que les 'cols' tiennent toujours horizontalement */
+    --cell-size: calc(
+      (100vw - 2 * var(--grid-padding) - 2 * var(--main-border-size)) /
+        var(--cols)
+    );
+    /* width: calc(100vw - 2 * var(--grid-padding)); */
+    /* width: 100vw; */
+  }
+}
+
+/* Sur mobile (Paysage / Tablette) */
+@media (max-width: 1024px) and (orientation: landscape) {
+  .main_container {
+    /* On adapte par rapport à la hauteur pour ne pas avoir à scroller */
+    --cell-size: calc((100vh - 150px) / var(--rows));
+  }
 }

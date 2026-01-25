@@ -1,16 +1,28 @@
 import { memo } from 'react';
 import Cell from '../cell/cell';
 import styles from './grid.module.css';
-import { ROWS, CELL_SIZE } from '../../constants';
+
 import { GridGameProps } from '../../types';
 
-const RawGrid = ({ datas, leftClick, rightClick, status }: GridGameProps) => {
+const RawGrid = ({
+  datas,
+  leftClick,
+  rightClick,
+  status,
+  cols,
+  rows,
+}: GridGameProps) => {
+  console.log(cols, rows);
   return (
     <div
       className={styles.main_container}
-      style={{
-        width: `${ROWS * CELL_SIZE}px`,
-      }}
+      style={
+        {
+          '--color': 'red',
+          '--rows': rows,
+          '--cols': cols,
+        } as React.CSSProperties
+      }
     >
       {datas.length > 0
         ? datas.map((cell, index) => (

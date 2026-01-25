@@ -1,11 +1,5 @@
 import { StatusColorType, ColorType } from '../types';
 
-export const MINES_QTY = 5;
-export const LINES = 5;
-export const ROWS = 5;
-export const CELL_SIZE = 80;
-export const NB_CELLS = LINES * ROWS;
-
 export const CUSTOM_GREY = '#3f4747';
 export const CUSTOM_GREEN = '#23ce6b';
 const customRed = 'red';
@@ -26,4 +20,10 @@ export const MINES_INDICATOR_COLORS: ColorType = {
   6: '#4DD0E1',
   7: '#F5F5F5',
   8: '#B0BEC5',
+};
+
+export const LEVELS = {
+  EASY: { l: 10, r: 10, mines: 10 },
+  MEDIUM: { l: 12, r: 18, mines: 40 },
+  HARD: { l: 15, r: 25, mines: 99 },
 };

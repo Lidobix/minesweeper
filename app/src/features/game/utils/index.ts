@@ -1,4 +1,3 @@
-import { ROWS, NB_CELLS, MINES_QTY } from '../constants';
 import { GridType, CellId, CellType } from '../types';
 
 interface Indexes {
@@ -7,8 +6,8 @@ interface Indexes {
   downIndexes: CellId[];
 }
 
-const setIndexes = (id: CellId): Indexes => {
-  const currentRow = id % ROWS;
+const setIndexes = (id: CellId, grid: GridType, rows: number): Indexes => {
+  const currentRow = id % rows;
 
   let startIndex = 0;
   let endIndex = 0;
@@ -18,36 +17,36 @@ const setIndexes = (id: CellId): Indexes => {
   let downIndexes = [];
 
   if (currentRow === 0) {
-    startIndex = id - ROWS;
-    endIndex = id + (ROWS + 1);
+    startIndex = id - rows;
+    endIndex = id + (rows + 1);
 
     upIndexes = [startIndex, startIndex + 1];
-    downIndexes = [startIndex + 2 * ROWS, endIndex];
+    downIndexes = [startIndex + 2 * rows, endIndex];
     sidesIndexes = [id + 1];
-  } else if (currentRow === ROWS - 1) {
-    startIndex = id - (ROWS + 1);
-    endIndex = id + ROWS;
+  } else if (currentRow === rows - 1) {
+    startIndex = id - (rows + 1);
+    endIndex = id + rows;
 
     upIndexes = [startIndex, startIndex + 1];
-    downIndexes = [startIndex + 2 * ROWS, endIndex];
+    downIndexes = [startIndex + 2 * rows, endIndex];
     sidesIndexes = [id - 1];
   } else {
-    startIndex = id - (ROWS + 1);
-    endIndex = id + (ROWS + 1);
+    startIndex = id - (rows + 1);
+    endIndex = id + (rows + 1);
 
     upIndexes = [startIndex, startIndex + 2];
-    downIndexes = [startIndex + 2 * ROWS, endIndex];
+    downIndexes = [startIndex + 2 * rows, endIndex];
     sidesIndexes = [id - 1, id + 1];
   }
 
   upIndexes = upIndexes.filter((index) => index >= 0);
-  downIndexes = downIndexes.filter((index) => index <= NB_CELLS - 1);
+  downIndexes = downIndexes.filter((index) => index <= grid.length - 1);
 
   return { upIndexes, downIndexes, sidesIndexes };
 };
 
-export const getCellsAround = (id: CellId, grid: GridType) => {
-  const { upIndexes, downIndexes, sidesIndexes } = setIndexes(id);
+export const getCellsAround = (id: CellId, grid: GridType, rows: number) => {
+  const { upIndexes, downIndexes, sidesIndexes } = setIndexes(id, grid, rows);
 
   let upCells: GridType = [];
   let sidesCells: GridType = [];
@@ -73,18 +72,26 @@ export const getCellsAround = (id: CellId, grid: GridType) => {
   return upCells.concat(sidesCells, downCells);
 };
 
-export const getMinesAround = (cell: CellType, grid: GridType): number => {
-  const cellsAround = getCellsAround(cell.id, grid);
+export const getMinesAround = (
+  cell: CellType,
+  grid: GridType,
+  rows: number,
+): number => {
+  const cellsAround = getCellsAround(cell.id, grid, rows);
 
   return cellsAround.filter((cell) => cell.isMine).length;
 };
 
-export const getRandomMinesIndexes = (safeId: number) => {
+export const getRandomMinesIndexes = (
+  safeId: number,
+  minesQty: number,
+  grid: GridType,
+) => {
   const indexes: number[] = [];
 
   let i = 0;
-  while (i < MINES_QTY) {
-    const number = Math.floor(Math.random() * NB_CELLS);
+  while (i < minesQty) {
+    const number = Math.floor(Math.random() * grid.length);
 
     if (!indexes.includes(number) && number !== safeId) {
       indexes.push(number);

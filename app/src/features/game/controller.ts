@@ -1,25 +1,33 @@
 import { GridType, CellId, CellType, StatusType } from './types';
-import { MINES_QTY, NB_CELLS } from './constants';
 import { getCellsAround, getMinesAround, getRandomMinesIndexes } from './utils';
 
 export const fillGrid = (
   safeCell: CellType,
   currentGrid: GridType,
+  minesQty: number,
+  rows: number,
 ): GridType => {
-  const minesPositions = getRandomMinesIndexes(safeCell.id);
+  const minesPositions = getRandomMinesIndexes(
+    safeCell.id,
+    minesQty,
+    currentGrid,
+  );
 
   let newGrid = currentGrid.map((c) => ({
     ...c,
     isMine: minesPositions.includes(c.id),
     value: 0,
   }));
-  newGrid = setMinesValues(newGrid);
+  newGrid = setMinesValues(newGrid, rows);
+
   return newGrid;
 };
 
 export const getOpenedCells = (
   cell: CellType,
   grid: GridType,
+  minesQty: number,
+  rows: number,
 ): {
   updatedGrid: GridType;
   status: StatusType;
@@ -43,7 +51,7 @@ export const getOpenedCells = (
       idsToOpen.add(currentId);
 
       if (currentCell.value === 0) {
-        const neighbors = getCellsAround(currentId, grid);
+        const neighbors = getCellsAround(currentId, grid, rows);
         neighbors.forEach((n) => {
           if (!idsToOpen.has(n.id)) stack.push(n.id);
         });
@@ -52,7 +60,7 @@ export const getOpenedCells = (
 
     const alreadyOpened = grid.filter((c) => c.isOpen).length;
     const totalOpened = alreadyOpened + idsToOpen.size;
-    const isWin = totalOpened === NB_CELLS - MINES_QTY;
+    const isWin = totalOpened === grid.length - minesQty;
 
     return {
       updatedGrid: grid.map((c) =>
@@ -63,8 +71,13 @@ export const getOpenedCells = (
   }
 };
 
-export const placeFlag = (cell: CellType, grid: GridType, flags: number) => {
-  if (cell.isOpen || (flags === MINES_QTY && !cell.hasFlag)) {
+export const placeFlag = (
+  cell: CellType,
+  grid: GridType,
+  flags: number,
+  minesQty: number,
+) => {
+  if (cell.isOpen || (flags === minesQty && !cell.hasFlag)) {
     return grid;
   }
   return grid.map((c) => {
@@ -75,9 +88,9 @@ export const placeFlag = (cell: CellType, grid: GridType, flags: number) => {
   });
 };
 
-const setMinesValues = (grid: GridType): GridType => {
+const setMinesValues = (grid: GridType, rows: number): GridType => {
   return grid.map((cell) => {
     if (cell.isMine) return cell;
-    return { ...cell, value: getMinesAround(cell, grid) };
+    return { ...cell, value: getMinesAround(cell, grid, rows) };
   });
 };

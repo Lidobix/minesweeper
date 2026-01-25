@@ -13,6 +13,7 @@ export interface CellProps {
   onClick: (cell: CellType) => void;
   onContextMenu: (cell: CellType, e: React.MouseEvent) => void;
   status: StatusType;
+  style?: React.CSSProperties;
 }
 
 export type GridType = CellType[];
@@ -22,10 +23,18 @@ export interface GridGameProps {
   leftClick: (cell: CellType) => void;
   rightClick: (cell: CellType, e: React.MouseEvent) => void;
   status: StatusType;
+  cols: number;
+  rows: number;
+  style?: React.CSSProperties;
 }
 
 export interface CounterProps {
   value: number;
+  style?: React.CSSProperties;
+}
+
+export interface TimerProps {
+  style?: React.CSSProperties;
 }
 
 export type StatusType = 'standBy' | 'playing' | 'lost' | 'win';
@@ -34,6 +43,7 @@ export interface HeaderProps {
   flags: number;
   buttonClick: () => void;
   status: StatusType;
+  style?: React.CSSProperties;
 }
 
 export interface ButtonProps {

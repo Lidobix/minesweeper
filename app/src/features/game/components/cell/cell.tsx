@@ -1,10 +1,9 @@
 import { memo } from 'react';
 import {
-  CELL_SIZE,
   CUSTOM_GREEN,
   CUSTOM_GREY,
   MINES_INDICATOR_COLORS,
-} from '../../constants';
+} from '../../constants/config';
 import { CellProps } from '../../types';
 import styles from './cell.module.css';
 
@@ -30,8 +29,6 @@ const RawCell = ({ cell, onClick, onContextMenu, status }: CellProps) => {
       onContextMenu={handleRightClick}
       className={styles.main_container}
       style={{
-        height: `${CELL_SIZE}px`,
-        width: `${CELL_SIZE}px`,
         backgroundColor: cell.isOpen ? CUSTOM_GREY : CUSTOM_GREEN,
         cursor:
           status !== 'playing' && status !== 'standBy'
