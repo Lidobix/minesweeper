@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { GameContext } from '../context/gameContext';
+import { GameContext } from '../contexts/gameContext';
 
 export const useTimer = () => {
   const { status, setTime } = useContext(GameContext);

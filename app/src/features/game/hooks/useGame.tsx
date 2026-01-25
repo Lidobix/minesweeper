@@ -1,7 +1,7 @@
 import { useContext, useCallback, useRef, useEffect } from 'react';
 import { CellType } from '../types';
 import { getOpenedCells, placeFlag, fillGrid } from '../controller';
-import { GameContext } from '../context/gameContext';
+import { GameContext } from '../contexts/gameContext';
 
 export const useGame = () => {
   const { grid, status, setStatus, setGrid, resetGame, cols, rows, minesQty } =

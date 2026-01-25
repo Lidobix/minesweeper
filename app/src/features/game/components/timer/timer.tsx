@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import styles from './timer.module.css';
-import { GameContext } from '../../context/gameContext';
+import { GameContext } from '../../contexts/gameContext';
 import { formatTime } from '../../utils';
 import { useTimer } from '../../hooks/useTimer';
 import { TimerProps } from '../../types';
