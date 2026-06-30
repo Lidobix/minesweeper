@@ -39,16 +39,10 @@ export interface TimerProps {
 
 export type StatusType = 'standBy' | 'playing' | 'lost' | 'win';
 
-export interface HeaderProps {
+export interface GameHeaderProps {
   flags: number;
   buttonClick: () => void;
   status: StatusType;
-  style?: React.CSSProperties;
-}
-
-export interface ButtonProps {
-  text: string;
-  onClick: () => void;
   style?: React.CSSProperties;
 }
 
@@ -57,3 +51,18 @@ export interface ColorType {
 }
 
 export type StatusColorType = Record<StatusType, string>;
+
+export interface LevelSelectorProps {
+  style?: React.CSSProperties;
+  selectLevel?: (level: LevelType) => void;
+  levels?: LevelType[];
+  // currentLevel: LevelType;
+}
+
+export interface LevelType {
+  value: string;
+  c: number;
+  r: number;
+  mines: number;
+  selected: boolean;
+}

@@ -3,17 +3,31 @@
 :root {
   --background: #272d2d;
   --foreground: #171717;
-  --cell-size: 40px;
+  /* --cell-size: clamp(15px, 15%, 20px); */
+  /* --cell-size: 2vw; */
+  --cell-size: clamp(10px, 1rem, 50px);
+  /* --cell-size: 31px; */
   --main-border-size: 0px;
-  --grid-padding: 15px;
+  --grid-padding: 0.5vw;
+
 }
+
+
+
+
+
+
+
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+
 }
+
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -25,29 +39,129 @@
 html {
   margin: 0;
   padding: 0;
+  display: flex;
+  justify-content: center;
+  /* height: 100vh; */
+  /* width: 100%; */
+  font-size: 100%;
 }
+
 
 body {
   background: var(--background);
+
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
-}
+  height: 100vh;
+  
 
-.title {
-  background-color: var(--background);
-}
-
-.game_container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+/* font-size: clamp(1.6rem, 1.2vw + 1rem, 1.9rem); */
+  
+  width: 100vw;
 }
-@media (max-width: 768px) and (orientation: portrait) {
-  .game_container {
-    display: block;
-    width: 100%;
-  }
+header {
+  background-color: var(--background);
+  padding: 10px var(--grid-padding);
+  position: sticky;
+  top: 0;
 }
 
-@media (max-width: 1024px) and (orientation: landscape) {
+h1 {
+  flex-grow: 1;
+  margin: 0;
+  font-size: calc(1.5rem + 2vw);
+  color: #db9d2b;
+  text-align: center;
+}
+
+main {
+  display: flex;
+  flex: 1;
+  /* width: 100%;
+  height: 100%; */
+}
+
+
+
+button {
+  cursor: pointer;
+}
+
+.modal_button {
+  display: none;
+}
+@media (min-width: 2000px) {
+:root {
+  /* --background: #272d2d;
+  --foreground: #171717;
+        --cell-size: 21px;
+  --main-border-size: 0px;
+  --grid-padding: 15px; */
+ /* --cell-size: clamp(20px, 25vw, 20px); */
+ /* --cell-size: 2.1vw */
+}
+
+html{
+  /* font-size: 151%; */
+}
+
+
+body{
+  background-color: red;
+}
+
+
+}
+
+
+/* @media (max-width: 1024px) and (orientation: landscape) {
+
+:root {
+  --background: #272d2d;
+  --foreground: #171717;
+        --cell-size: 21px;
+  --main-border-size: 0px;
+  --grid-padding: 15px;
+ --cell-size: clamp(15px, 15%, 31px);
+}
+
+
+
+} */
+@media (max-width: 1441px)
+ /* and (orientation: landscape) */
+ {
+:root {
+  /* --background: #272d2d;
+  --foreground: #171717;
+        --cell-size: 21px;
+  --main-border-size: 0px;
+  --grid-padding: 15px; */
+ /* --cell-size: 2.1vw; */
+}
+
+
+
+body{
+  background-color: orange;
+}
+
+}
+
+
+@media (max-width: 768px) and (orientation: portrait) {
+  body {
+    /* display: block; */
+    background-color: blue;
+    width: 100%;
+  }
+
+  main {
+    /* flex-direction: column; */
+  }
+  .modal_button {
+    display: block;
+  }
 }

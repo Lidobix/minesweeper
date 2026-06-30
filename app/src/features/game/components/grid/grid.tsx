@@ -12,7 +12,6 @@ const RawGrid = ({
   cols,
   rows,
 }: GridGameProps) => {
-  console.log(cols, rows);
   return (
     <div
       className={styles.main_container}

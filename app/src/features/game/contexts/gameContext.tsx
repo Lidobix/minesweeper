@@ -1,5 +1,6 @@
 import { useState, createContext, ReactNode, useCallback } from 'react';
-import { GridType, StatusType } from '../types';
+import { GridType, StatusType, LevelType } from '../types';
+import { LEVELS } from '../constants/config';
 
 interface GameContextProps {
   grid: GridType;
@@ -8,6 +9,8 @@ interface GameContextProps {
   cols: number;
   rows: number;
   minesQty: number;
+  levels: LevelType[];
+  toggleLevel: (level: LevelType) => void;
   setGrid: React.Dispatch<React.SetStateAction<GridType>>;
   setStatus: React.Dispatch<React.SetStateAction<StatusType>>;
   setTime: React.Dispatch<React.SetStateAction<number>>;
@@ -21,6 +24,8 @@ export const GameContext = createContext<GameContextProps>({
   cols: 0,
   rows: 0,
   minesQty: 0,
+  levels: [],
+  toggleLevel: () => {},
   setGrid: () => {},
   setStatus: () => {},
   setTime: () => {},
@@ -34,31 +39,37 @@ interface GameProviderProps {
 export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const defaultStatus: StatusType = 'standBy';
   const [time, setTime] = useState(0);
-  const [minesQty, setMinesQty] = useState(25);
+  const [levels, setLevels] = useState<LevelType[]>(LEVELS);
+  const [minesQty, setMinesQty] = useState(0);
   const [grid, setGrid] = useState<GridType>([] as GridType);
 
   const [status, setStatus] = useState<StatusType>(defaultStatus);
   const [cols, setCols] = useState(0);
   const [rows, setRows] = useState(0);
 
-  const getDimensions = (levelConfig: { l: number; r: number }) => {
+  const getDimensions = (level: LevelType) => {
     const isLandscape = window.innerHeight < window.innerWidth;
+    // console.log('isLandscape: ', isLandscape);
 
     return {
-      cols: isLandscape ? levelConfig.l : levelConfig.r,
-      rows: isLandscape ? levelConfig.r : levelConfig.l,
+      cols: isLandscape ? level.c : level.r,
+      rows: isLandscape ? level.r : level.c,
+      mines: level.mines,
     };
   };
 
   const resetGame = useCallback(() => {
-    const { cols: computedCols, rows: computedRows } = getDimensions({
-      l: 17,
-      r: 10,
-    });
-    console.log(computedCols, computedRows);
+    const {
+      cols: computedCols,
+      rows: computedRows,
+      mines,
+    } = getDimensions(levels.filter((level) => level.selected === true)[0]);
 
+    // console.log('cols: ', computedCols);
+    // console.log('rows: ', computedRows);
     setCols(computedCols);
     setRows(computedRows);
+    setMinesQty(mines);
 
     setGrid(
       Array.from({ length: computedCols * computedRows }, (_, index) => ({
@@ -71,7 +82,22 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     );
     setStatus(defaultStatus);
     setTime(0);
-  }, [setGrid, setStatus, setTime]);
+  }, [setGrid, setStatus, setTime, levels]);
+
+  const toggleLevel = useCallback(
+    (level: LevelType) => {
+      setLevels((currentLevels) => {
+        return currentLevels.map((currentLevel) => {
+          return {
+            ...currentLevel,
+            selected: currentLevel.value === level.value,
+          };
+        });
+      });
+    },
+
+    [setLevels],
+  );
 
   return (
     <GameContext.Provider
@@ -82,6 +108,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         rows,
         cols,
         minesQty,
+        levels,
+        toggleLevel,
         setGrid,
         setStatus,
         setTime,

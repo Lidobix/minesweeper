@@ -1,3 +1,25 @@
 .main_container {
   border: var(--main-border-size) solid #3f4747;
+  padding-bottom: var(--grid-padding);
+  display: flex;
+}
+
+.element {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+  .main_container {
+    display: block;
+  }
+
+  .side_element {
+    display: none;
+  }
+}
+
+@media (max-width: 1024px) and (orientation: landscape) {
 }

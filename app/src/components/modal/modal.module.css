@@ -1,5 +1,5 @@
 .main_container {
-  background-color: red;
+  /* background-color: red; */
   position: absolute;
   display: flex;
   flex-direction: column;

@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, memo } from 'react';
 import Grid from './components/grid/grid';
 import { useGame } from './hooks/useGame';
 import { CellType } from './types';
-import Header from './components/header/header';
+import GameHeader from './components/gameHeader/gameHeader';
 import styles from './index.module.css';
 import { STATUS_COLOR } from './constants/config';
+import LevelSelector from './components/levelSelector/levelSelector';
 
 interface MineSwiperProps {
   style?: React.CSSProperties;
@@ -14,12 +15,14 @@ const RawMineSweeper = ({ style }: MineSwiperProps) => {
   const {
     grid,
     status,
-    openCell,
-    toggleFlag,
-    resetGame,
     cols,
     rows,
     minesQty,
+    levels,
+    openCell,
+    toggleFlag,
+    resetGame,
+    selectLevel,
   } = useGame();
 
   const handleToggleFlag = useCallback(
@@ -31,6 +34,7 @@ const RawMineSweeper = ({ style }: MineSwiperProps) => {
   );
 
   useEffect(() => {
+    console.log('useeffetc');
     resetGame();
   }, [resetGame]);
 
@@ -40,21 +44,42 @@ const RawMineSweeper = ({ style }: MineSwiperProps) => {
   return (
     <div
       className={styles.main_container}
-      style={{ ...style, borderColor: STATUS_COLOR[status] }}
+      style={{
+        ...style,
+        borderColor: STATUS_COLOR[status],
+      }}
     >
-      <Header
-        flags={remainingFLags}
-        buttonClick={resetGame}
-        status={status}
-      ></Header>
-      <Grid
-        cols={cols}
-        rows={rows}
-        datas={grid}
-        leftClick={openCell}
-        rightClick={handleToggleFlag}
-        status={status}
-      ></Grid>
+      <div
+        className={`${styles.element} ${styles.side_element}`}
+        style={{
+          background: 'orange',
+        }}
+      >
+        <LevelSelector
+        // selectLevel={selectLevel}
+        // levels={levels}
+        ></LevelSelector>
+      </div>
+
+      <div className={styles.element} style={{}}>
+        <GameHeader
+          flags={remainingFLags}
+          buttonClick={resetGame}
+          status={status}
+        ></GameHeader>
+        <Grid
+          cols={cols}
+          rows={rows}
+          datas={grid}
+          leftClick={openCell}
+          rightClick={handleToggleFlag}
+          status={status}
+        ></Grid>
+      </div>
+      <div
+        className={`${styles.element} ${styles.side_element}`}
+        style={{}}
+      ></div>
     </div>
   );
 };

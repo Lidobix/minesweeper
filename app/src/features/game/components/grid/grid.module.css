@@ -10,7 +10,7 @@
   grid-template-columns: repeat(var(--cols), var(--cell-size));
   grid-template-rows: repeat(var(--rows), var(--cell-size));
   /* background-color: var(--color); */
-  gap: 2px;
+  gap: 0.2rem;
   box-sizing: content-box;
   justify-content: center;
   /* padding: var(--grid-padding); */
@@ -35,6 +35,6 @@
 @media (max-width: 1024px) and (orientation: landscape) {
   .main_container {
     /* On adapte par rapport à la hauteur pour ne pas avoir à scroller */
-    --cell-size: calc((100vh - 150px) / var(--rows));
+    /* --cell-size: calc((100vh - 150px) / var(--rows)); */
   }
 }

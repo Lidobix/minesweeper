@@ -1,4 +1,4 @@
-import { StatusColorType, ColorType } from '../types';
+import { StatusColorType, ColorType, LevelType } from '../types';
 
 export const CUSTOM_GREY = '#3f4747';
 export const CUSTOM_GREEN = '#23ce6b';
@@ -22,8 +22,8 @@ export const MINES_INDICATOR_COLORS: ColorType = {
   8: '#B0BEC5',
 };
 
-export const LEVELS = {
-  EASY: { l: 10, r: 10, mines: 10 },
-  MEDIUM: { l: 12, r: 18, mines: 40 },
-  HARD: { l: 15, r: 25, mines: 99 },
-};
+export const LEVELS: LevelType[] = [
+  { value: 'Facile', c: 10, r: 10, mines: 10, selected: false },
+  { value: 'Moyen', c: 18, r: 12, mines: 40, selected: true },
+  { value: 'Difficile', c: 25, r: 15, mines: 99, selected: false },
+];

@@ -1,11 +1,22 @@
 import { useContext, useCallback, useRef, useEffect } from 'react';
-import { CellType } from '../types';
+import { CellType, LevelType } from '../types';
 import { getOpenedCells, placeFlag, fillGrid } from '../controller';
 import { GameContext } from '../contexts/gameContext';
 
 export const useGame = () => {
-  const { grid, status, setStatus, setGrid, resetGame, cols, rows, minesQty } =
-    useContext(GameContext);
+  const {
+    grid,
+    status,
+    cols,
+    rows,
+    minesQty,
+    levels,
+    // currentLevel,
+    setStatus,
+    setGrid,
+    resetGame,
+    toggleLevel,
+  } = useContext(GameContext);
 
   const statusRef = useRef(status);
 
@@ -15,6 +26,7 @@ export const useGame = () => {
 
   const openCell = useCallback(
     (cell: CellType) => {
+      console.log('opencell');
       const currentStatus = statusRef.current;
       if (cols === 0 || minesQty === 0) return;
       if (
@@ -59,14 +71,24 @@ export const useGame = () => {
     [setGrid, minesQty],
   );
 
+  const selectLevel = useCallback(
+    (level: LevelType) => {
+      toggleLevel(level);
+    },
+    [toggleLevel],
+  );
+
   return {
     grid,
     status,
     cols,
     rows,
     minesQty,
+    levels,
+    // currentLevel,
     resetGame,
     openCell,
     toggleFlag,
+    selectLevel,
   };
 };
