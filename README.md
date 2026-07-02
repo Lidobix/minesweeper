@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💣 MineSweeper
 
-## Getting Started
+Ce projet réalisé avec NextJS reproduit la mécanique du jeu Démineur diffusé à travers les OS Windoxs des années 90/2000.
+**Objectif**: Découvrir toutes les mines cachées sous les cases de la grille sans cliquer sur une case piégée.
 
-First, run the development server:
+### Aperçus:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+![aperçu_1](docs/screen_01.png)
+![aperçu_2](docs/screen_02.png)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Stack:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- NextJS
+- Typescript
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Installation:
 
-## Learn More
+`npm install`
+`npm run dev`
+Jeu disponible sur `http://localhost:3000`
 
-To learn more about Next.js, take a look at the following resources:
+## Fonctionnalités:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Définition d'une grille de jeu 5x5 avec 5 mines placées aléatoirement.
+- Possibilité de déposer un flag sur les cases susceptibles de cacher une mine.
+- Actions por déposer/retirer un flag:
+  - **Mobile**: appui long
+  - **Desktop**: clic droit.
+- La première case sélectionnée ne cache pas de mine.
+- Jeu chronométré.
+- Nouvelle partie en cliquant sur le smiley.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Statut projet:
 
-## Deploy on Vercel
+Side project assez avancé, l'objectif était de reproduire fidèlement les règles du jeu d'origine en utilisant les contextes/hooks de react, optimiser les mises à jour du statut des cases ainsi que celui de la partie (en cours/gagné/perdu).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Updates prévus:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Optimisation du responsive.
+- Ajout d'un sélecteur de niveaux.
+
+**Lidobix**
