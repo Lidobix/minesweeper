@@ -1,0 +1,45 @@
+.main {
+  padding: 20 0;
+  text-align: center;
+}
+
+.resume {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10;
+  margin: 20 0;
+}
+
+.link {
+  text-decoration: underline;
+}
+
+.icon {
+  width: 30;
+  height: 30;
+  display: block;
+  background-size: cover;
+  background-position: center;
+}
+
+.githubIcon {
+  background-color: white;
+  background-image: url('./../../public/images/github.png');
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+
+.linkedinIcon {
+  background-image: url('./../../public/images/linkedin_icon.webp');
+}
+
+@media (min-width: 768px) {
+  .icon {
+    width: 30;
+    height: 30;
+  }
+}
