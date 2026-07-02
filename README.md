@@ -16,7 +16,9 @@ Ce projet réalisé avec NextJS reproduit la mécanique du jeu Démineur diffus�
 ## Installation:
 
 `npm install`
+
 `npm run dev`
+
 Jeu disponible sur `http://localhost:3000`
 
 ## Fonctionnalités:
