@@ -1,6 +1,7 @@
 # 💣 MineSweeper
 
 Ce projet réalisé avec NextJS reproduit la mécanique du jeu Démineur diffusé à travers les OS Windoxs des années 90/2000.
+
 **Objectif**: Découvrir toutes les mines cachées sous les cases de la grille sans cliquer sur une case piégée.
 
 ### Aperçus:
