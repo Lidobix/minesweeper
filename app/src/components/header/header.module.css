@@ -36,10 +36,3 @@
 .linkedinIcon {
   background-image: url('./../../public/images/linkedin_icon.webp');
 }
-
-@media (min-width: 768px) {
-  .icon {
-    width: 30;
-    height: 30;
-  }
-}
